@@ -8,7 +8,7 @@ import time
 #from PyQt5 import QtCore,QtGui,QtWidgets
 #from PyQt5 import uic
 camera=PiCamera()
-camera.resolution(3280,2464)
+camera.resolution=(3280,2464)
 gp.setup(7,gp.OUT)
 gp.setup(11,gp.OUT)
 gp.setup(12,gp.OUT)
