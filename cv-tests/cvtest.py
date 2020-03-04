@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from nanpy import (ArduinoApi, SerialManager)
+#from nanpy import (ArduinoApi, SerialManager)
 import time
 from picamera import PiCamera
 import math
@@ -17,8 +17,8 @@ camera.meter_mode='backlit'
 camera.saturation=50
 camera.shutter_speed=4000
 lsrctrl = 32
-connection = SerialManager(device='/dev/ttyACM0')
-a = ArduinoApi(connection=connection)
+#connection = SerialManager(device='/dev/ttyACM0')
+#a = ArduinoApi(connection=connection)
 a.pinMode(lsrctrl, a.OUTPUT)
 a.digitalWrite(lsrctrl, a.HIGH)
 camera.start_preview(fullscreen=False,window=(100,20,640,480))
