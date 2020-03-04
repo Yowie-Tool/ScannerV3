@@ -29,7 +29,7 @@ def main():
     
 def capture(cam):
     camera.start_preview()
-    sleep(2)
+    time.sleep(2)
     camera.capture('camera%d.jpg'%cam)
 
 if __name__ == "__main__":
