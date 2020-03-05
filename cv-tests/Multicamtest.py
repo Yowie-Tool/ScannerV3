@@ -16,21 +16,59 @@ gp.setup(11,gp.OUT)
 gp.setup(12,gp.OUT)
 gp.setup(13,gp.OUT)
 
-def main():
+def camera1photo():
     gp.output(7, False)
     gp.output(11, False)
     gp.output(12, True)
-    capture(1)
+    camera.start_preview()
+    time.sleep(2)
+    camera.capture('camera1.jpg')
+    camera.stop_preview()
     
+def camera1preview():
+    gp.output(7, False)
+    gp.output(11, False)
+    gp.output(12, True)
+    camera.start_preview()
+
+def cameraend():
+    camera.stop_preview()
+
+def camera2photo():
     gp.output(7, False)
     gp.output(11, True)
     gp.output(12, False)
-    capture(3)
-    
-def capture(cam):
     camera.start_preview()
     time.sleep(2)
-    camera.capture('camera%d.jpg'%cam)
+    camera.capture('camera2.jpg')
+    camera.stop_preview()
+    
+def camera2preview():
+    gp.output(7, False)
+    gp.output(11, True)
+    gp.output(12, False)
+    camera.start_preview()
 
+def main():
+   userin=""
+   while userin != "end":
+        userin=input("Command: ")
+        if userin=='photo1':
+            camera1photo()
+        if userin=='1':
+            camera1preview()
+        if userin=='photo2':
+            camera2photo()
+        if userin=='2':
+            camera2preview()
+        if userin=='s':
+            cameraend()
+        if userin=='h':
+            print "photo1 - take photo with camera 1"
+            print "1 - start preview on camera 1"
+            print "photo2 - take photo with camera 2"
+            print "2 - start preview on camera 2"
+            print "s - stop preview (either camera)"
+    
 if __name__ == "__main__":
     main()
