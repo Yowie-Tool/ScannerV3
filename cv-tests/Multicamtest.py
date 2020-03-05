@@ -77,6 +77,9 @@ def main():
             print ("photo2 - take photo with camera 2")
             print ("2 - start preview on camera 2")
             print ("s - stop preview (either camera)")
+        if userin=='e':
+            camera.close()
+
     
 if __name__ == "__main__":
     main()
