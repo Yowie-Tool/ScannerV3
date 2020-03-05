@@ -35,18 +35,18 @@ def cameraend():
     camera.stop_preview()
 
 def camera2photo():
-    gp.output(7, False)
-    gp.output(11, True)
-    gp.output(12, False)
+    gp.output(7, True)
+    gp.output(11, False)
+    gp.output(12, True)
     camera.start_preview()
     time.sleep(2)
     camera.capture('camera2.jpg')
     camera.stop_preview()
     
 def camera2preview():
-    gp.output(7, False)
-    gp.output(11, True)
-    gp.output(12, False)
+    gp.output(7, True)
+    gp.output(11, False)
+    gp.output(12, True)
     camera.start_preview()
 
 def main():
