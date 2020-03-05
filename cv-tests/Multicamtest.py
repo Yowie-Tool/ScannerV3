@@ -64,11 +64,11 @@ def main():
         if userin=='s':
             cameraend()
         if userin=='h':
-            print "photo1 - take photo with camera 1"
-            print "1 - start preview on camera 1"
-            print "photo2 - take photo with camera 2"
-            print "2 - start preview on camera 2"
-            print "s - stop preview (either camera)"
+            print ("photo1 - take photo with camera 1")
+            print ("1 - start preview on camera 1")
+            print ("photo2 - take photo with camera 2")
+            print ("2 - start preview on camera 2")
+            print ("s - stop preview (either camera)")
     
 if __name__ == "__main__":
     main()
