@@ -69,22 +69,24 @@ def main():
         userin=input("Command: ")
         if userin=='p1':
             camera1photo()
-        if userin=='1':
+        if userin=='c1':
             camera1preview()
         if userin=='p2':
             camera2photo()
-        if userin=='2':
+        if userin=='c2':
             camera2preview()
         if userin=='s':
             cameraend()
         if userin=='h':
             print ("photo1 - take photo with camera 1")
-            print ("1 - start preview on camera 1")
+            print ("p1 - start preview on camera 1")
             print ("photo2 - take photo with camera 2")
-            print ("2 - start preview on camera 2")
+            print ("p2 - start preview on camera 2")
             print ("s - stop preview (either camera)")
-        if userin=="c":
+            print("cs - close camera")
+        if userin=="cs":
             camerastop()
+camera.close()
 
     
 if __name__ == "__main__":
