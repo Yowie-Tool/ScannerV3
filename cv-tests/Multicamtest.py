@@ -24,6 +24,7 @@ def camera1photo():
     sleep(2)
     camera.capture('camera1.jpg')
     camera.stop_preview()
+    print("Camera A")
 
     
 def camera1preview():
@@ -33,28 +34,31 @@ def camera1preview():
     gp.output(11, False)
     gp.output(12, True)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
+    print("Camera A")
 
 def cameraend():
     camera.stop_preview()
 
 def camera2photo():
-    i2c = "i2cset -y 1 0x64 0x00 0x04"
+    i2c = "i2cset -y 1 0x70 0x00 0x06"
     os.system(i2c)
-    gp.output(7, True)
-    gp.output(11, False)
-    gp.output(12, True)
+    gp.output(7, False)
+    gp.output(11, True)
+    gp.output(12, False)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
     sleep(2)
     camera.capture('camera2.jpg')
     camera.stop_preview()
+    print("Camera A")
     
 def camera2preview():
-    i2c = "i2cset -y 1 0x64 0x00 0x04"
+    i2c = "i2cset -y 1 0x70 0x00 0x06"
     os.system(i2c)
-    gp.output(7, True)
-    gp.output(11, False)
-    gp.output(12, True)
+    gp.output(7, False)
+    gp.output(11, True)
+    gp.output(12, False)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
+    print("Camera A")
     
 def camerastop():
     camera.close()
