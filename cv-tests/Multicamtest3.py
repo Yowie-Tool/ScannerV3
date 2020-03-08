@@ -40,7 +40,7 @@ def camera4():
     os.system(i2c)
 
 def ccheck():
-    camera.check_camera_open()
+    camera._check_camera_open()
     
 def cpreview():
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
