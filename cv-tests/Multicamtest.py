@@ -1,76 +1,76 @@
 #!/usr/bin/python3
 
 #Test program for Arducam multi camera adapter V2.2 with cameras attached to ports A and C
-import RPi.GPIO as gp
+from gpiozero import LED
 import os
 from picamera import PiCamera
 from time import sleep
-gp.setwarnings(False)
-gp.setmode(gp.BOARD)
-gp.setup(7,gp.OUT)
-gp.setup(11,gp.OUT)
-gp.setup(12,gp.OUT)
-gp.setup(13,gp.OUT)
+cselect=LED(4)
+cenable1=LED(17)
+cenable2=LED(18)
+laser=LED(20)
+camera=PiCamera()
+
 
 def camera1photo():
     i2c = "i2cset -y 1 0x70 0x00 0x04"
     os.system(i2c)
-    camera=PiCamera()
+    cselect.off()
+    cenable1.off()
+    cenable2.on()
     camera.resolution=(3280,2464)
-    gp.output(7, False)
-    gp.output(11, False)
-    gp.output(12, True)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
     sleep(2)
     camera.capture('camera1.jpg')
     camera.stop_preview()
-    camera.close()
     print("Photo Taken on Camera 1")
 
     
 def camera1preview():
     i2c = "i2cset -y 1 0x70 0x00 0x04"
     os.system(i2c)
-    camera=PiCamera()
+    cselect.off()
+    cenable1.off()
+    cenable2.on()
     camera.resolution=(640,480)
-    gp.output(7, False)
-    gp.output(11, False)
-    gp.output(12, True)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
     os.system('read -sn 1 -p "Press any key to continue..."')
     camera.stop_preview()
-    camera.close()
     
 
 def camera2photo():
     i2c = "i2cset -y 1 0x70 0x00 0x06"
     os.system(i2c)
-    camera=PiCamera()
+    cselect.off()
+    cenable1.on()
+    cenable2.off()
     camera.resolution=(3280,2464)
-    gp.output(7, False)
-    gp.output(11, True)
-    gp.output(12, False)
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
     sleep(2)
     camera.capture('camera2.jpg')
     camera.stop_preview()
-    print("Photo Taken on Camera 1")
-    camera.close()
+    print("Photo Taken on Camera 2")
     
 def camera2preview():
     i2c = "i2cset -y 1 0x70 0x00 0x06"
     os.system(i2c)
-    camera=PiCamera()
     camera.resolution=(640,480)
-    gp.output(7, False)
-    gp.output(11, True)
-    gp.output(12, False)
+    cselect.off()
+    cenable1.on()
+    cenable2.off()
     camera.start_preview(fullscreen=False,window=(0,0,640,480))
     print("Camera A")
     os.system('read -sn 1 -p "Press any key to continue..."')
     camera.stop_preview()
-    camera.close()
     
+def laseron():
+    laser.on()
+    print("Laser on")
+    
+def laseroff():
+    laser.off()
+    print("Laser off")
+
 
 def main():
     userin=""
@@ -84,13 +84,17 @@ def main():
             camera2photo()
         if userin=='c2':
             camera2preview()
-        if userin=='s':
-            cameraend()
+        if userin=='l1':
+            laseron()
+        if userin=='l0':
+            laseroff()
         if userin=='h':
-            print ("photo1 - take photo with camera 1")
+            print ("p1 - take photo with camera 1")
             print ("c1 - start preview on camera 1")
-            print ("photo2 - take photo with camera 2")
+            print ("p2 - take photo with camera 2")
             print ("c2 - start preview on camera 2")
+            print ('l1 - Turn laser on')
+            print ('l0 - Turn Laser off')
     
     camera.close()
 
