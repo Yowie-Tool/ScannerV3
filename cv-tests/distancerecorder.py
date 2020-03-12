@@ -173,6 +173,7 @@ def readimages():
 def main():
     userin=""
     while userin!='end':
+        userin=input("Command: ")
         if userin=="p":
             cpreview()
         if userin=="s":
