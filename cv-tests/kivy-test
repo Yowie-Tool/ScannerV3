@@ -1,0 +1,12 @@
+import kivy
+kivy.require('1.10.1')
+from kivy.app import app
+from kivy.uix.label import label
+
+class MyApp(App):
+
+	def build(self):
+		return Label(test='Hello world')
+		
+if name __name__ == '__main__':
+	MyApp().run()
