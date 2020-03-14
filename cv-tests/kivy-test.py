@@ -8,5 +8,5 @@ class MyApp(App):
 	def build(self):
 		return Label(test='Hello world')
 		
-if name __name__ == '__main__':
+if __name__ == "__main__":
 	MyApp().run()
