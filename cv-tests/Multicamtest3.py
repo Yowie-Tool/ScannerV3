@@ -53,7 +53,7 @@ def cpreview():
 def cstop():
     camera.stop_preview()
     
-def capture(capnum):
+def capture():
     camera.resolution=(3280,2464)
     starttime=time.time()
     camera.capture('capture%d.jpg'%capnum,'jpeg',use_video_port=True)
@@ -84,7 +84,7 @@ def main():
         if userin=='cc':
             ccheck()
         if userin=='cap':
-            capture(capnum)
+            capture()
         if userin=='l':
             laserc()
         if userin=='h':
