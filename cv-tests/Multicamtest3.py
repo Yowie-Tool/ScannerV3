@@ -60,7 +60,7 @@ def capture():
     endtime=time.time()
     print("captured in %d seconds"%(endtime-starttime))
     
-def laser():
+def laserc():
     laser.toggle()
     
 def main():
@@ -84,7 +84,7 @@ def main():
         if userin=='cap':
             capture()
         if userin=='l':
-            laser()
+            laserc()
         if userin=='h':
             print ("c1 - select camera 1")
             print ("c2 - select camera 2")
