@@ -13,7 +13,6 @@ cenable1.off()
 cenable2.on()
 camera=PiCamera()
 camera.resolution=(640,480)
-global capnum
 capnum=0
 
 def camera1():
