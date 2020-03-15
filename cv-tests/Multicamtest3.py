@@ -13,6 +13,7 @@ cenable1.off()
 cenable2.on()
 camera=PiCamera()
 camera.resolution=(640,480)
+global capnum
 capnum=0
 
 def camera1():
@@ -82,7 +83,7 @@ def main():
         if userin=='cc':
             ccheck()
         if userin=='cap':
-            capture()
+            capture(capnum)
         if userin=='l':
             laserc()
         if userin=='h':
