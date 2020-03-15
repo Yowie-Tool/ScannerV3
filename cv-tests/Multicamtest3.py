@@ -54,7 +54,7 @@ def cpreview():
 def cstop():
     camera.stop_preview()
     
-def capture():
+def capture(capnum):
     starttime=time.time()
     camera.capture('capture%d.jpg'%capnum,'jpeg',use_video_port=True)
     capnum=capnum+1
