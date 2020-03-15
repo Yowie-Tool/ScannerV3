@@ -13,7 +13,6 @@ cenable1.off()
 cenable2.on()
 camera=PiCamera()
 camera.resolution=(640,480)
-global capnum
 capnum=0
 
 def camera1():
@@ -55,8 +54,10 @@ def cstop():
     camera.stop_preview()
     
 def capture(capnum):
+    camera.resolution=(3280,2464)
     starttime=time.time()
     camera.capture('capture%d.jpg'%capnum,'jpeg',use_video_port=True)
+    global capnum
     capnum=capnum+1
     endtime=time.time()
     print("captured in %d seconds"%(endtime-starttime))
