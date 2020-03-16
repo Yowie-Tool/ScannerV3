@@ -90,8 +90,8 @@ def readimages():
     loff1=cv.imread('loff1.jpg')
     loff2=cv.imread('loff2.jpg')
     #get x and y size
-    ysize=lon1.shape[0]
-    xsize=lon1.shape[1]
+    ysize=int(lon1.shape[0])
+    xsize=int(lon1.shape[1])
     #subtract laser off from laser off images
     src1=cv.subtract(lon1,loff1)
     src2=cv.subtract(lon2,loff2)
@@ -115,8 +115,8 @@ def readimages():
     (MinVal2,MaxVal2,MinLoc2,MaxLoc2)=cv.minMaxLoc(threshold2)
     maxvalue2=np.argmax(threshold2,axis=0)
     #find the maximum value in the mid line of the camera
-    maxpoint1=maxvalue1[(ysize/2)]
-    maxpoint2=maxvalue2[(ysize/2)]
+    maxpoint1=maxvalue1[(int(ysize/2))]
+    maxpoint2=maxvalue2[(int(ysize/2))]
     #create a small array around the maximum value: Note - threshold[:,(ysize/2)] for column
     if maxpoint1<rangeinput:
         minrange1=0
@@ -127,7 +127,7 @@ def readimages():
     else:
         maxrange1=maxpoint1+rangeinput
     minmaxrange1=[minrange1,maxrange1]
-    newrange1=[x for x in threshold1[:,(ysize/2)] if minmaxrange1[0] <= x <= minmaxrange1[1]]
+    newrange1=[x for x in threshold1[:,(int(ysize/2))] if minmaxrange1[0] <= x <= minmaxrange1[1]]
     #find index of first value that is closest to median (will probably always be exact match in our case)
     med1i=newrange1.index(np.percentile(newrange1,50,'nearest'))
     med1=np.percentile(newrange1,50,'nearest')
@@ -153,7 +153,7 @@ def readimages():
     else:
         maxrange2=maxpoint2+rangeinput
     minmaxrange2=[minrange2,maxrange2]
-    newrange2=[x for x in threshold2[:,(ysize/2)] if minmaxrange2[0] <= x <= minmaxrange2[1]]
+    newrange2=[x for x in threshold2[:,(int(ysize/2))] if minmaxrange2[0] <= x <= minmaxrange2[1]]
     med2i=newrange2.index(np.percentile(newrange2,50,'nearest'))
     med2=np.percentile(newrange2,50,'nearest')
     numcount2=newrange2.count(med2)
