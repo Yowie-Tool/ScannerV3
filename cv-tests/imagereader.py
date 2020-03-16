@@ -47,11 +47,11 @@ for int1 in range(len1):
     minmaxrange1=maxrange1-minrange1
     for int2 in range(minmaxrange1):
         newrange1.append(threshold1[int1,int2])
-    file_object.write(minrange1 + ",")
+    file_object.write(str(minrange1) + ",")
     lenapp1=len(newrange1)
     for int3 in range(lenapp1):
-        file_object.write((newrange1[int3])+",")
-    file_object.write(maxrange1+"\n")
+        file_object.write(str((newrange1[int3]))+",")
+    file_object.write(str(maxrange1)+"\n")
 file_object.close
 
 
