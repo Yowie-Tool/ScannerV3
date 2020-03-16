@@ -52,7 +52,7 @@ for int1 in range(len1):
     for int3 in range(lenapp1):
         file_object.write(str((newrange1[int3]))+",")
     file_object.write(str(maxrange1)+"\n")
-    print("int1 - %d minrange1 - %d maxrange1 &d \r"%(int1,minrange1,maxrange1),end="")
+    print ('Current int: [%d] min range [%d] max range [%d]\r'%(int1,minrange1,maxrange1),end="")
 file_object.close
 
 
