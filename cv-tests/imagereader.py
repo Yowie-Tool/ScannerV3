@@ -46,7 +46,7 @@ for int1 in range(len1):
         maxrange1=(maxvalue1[int1])+rangeinput
     minmaxrange1=maxrange1-minrange1
     for int2 in range(minmaxrange1):
-        newrange1.append(threshold1[int1,int2])
+        newrange1.append(threshold1[int1,(int2+minrange1)])
     file_object.write(str(minrange1) + ",")
     lenapp1=len(newrange1)-1
     for int3 in range(lenapp1):
