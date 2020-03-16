@@ -84,6 +84,8 @@ def capture():
     print("photos captured in %d seconds"%timetaken)
     
 def readimages():
+    newrange1=[]
+    newrange2=[]
     starttime=time.time()
     lon1=cv.imread('lon1.jpg')
     lon2=cv.imread('lon2.jpg')
