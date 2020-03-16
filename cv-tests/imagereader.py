@@ -32,9 +32,9 @@ threshamount1=MaxVal1*threshinput
 retval1,threshold1=cv.threshold(red1,threshamount1,255,cv.THRESH_TOZERO);
 (MinVal1,MaxVal1,MinLoc1,MaxLoc1)=cv.minMaxLoc(threshold1)
 #now find the maximum values in the new thresholded image, by line.
-maxvalue1=np.argmax(threshold1,axis=0)
+maxvalue1=np.argmax(threshold1,axis=1)
 
-len1=len(maxvalue1)-1
+len1=len(maxvalue1)-2
 for int1 in range(len1):
     if (maxvalue1[int1]) < rangeinput:
         minrange1=0
