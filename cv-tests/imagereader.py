@@ -34,7 +34,7 @@ retval1,threshold1=cv.threshold(red1,threshamount1,255,cv.THRESH_TOZERO);
 #now find the maximum values in the new thresholded image, by line.
 maxvalue1=np.argmax(threshold1,axis=0)
 
-len1=len(maxvalue1)
+len1=len(maxvalue1)-1
 for int1 in range(len1):
     if (maxvalue1[int1]) < rangeinput:
         minrange1=0
@@ -48,10 +48,11 @@ for int1 in range(len1):
     for int2 in range(minmaxrange1):
         newrange1.append(threshold1[int1,int2])
     file_object.write(str(minrange1) + ",")
-    lenapp1=len(newrange1)
+    lenapp1=len(newrange1)-1
     for int3 in range(lenapp1):
         file_object.write(str((newrange1[int3]))+",")
     file_object.write(str(maxrange1)+"\n")
+    print("int1 - %d minrange1 - %d maxrange1 &d \r"%(int1,minrange1,maxrange1),end="")
 file_object.close
 
 
