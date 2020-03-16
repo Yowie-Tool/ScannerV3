@@ -36,6 +36,9 @@ maxvalue1=np.argmax(threshold1,axis=1)
 
 len1=len(maxvalue1)-2
 for int1 in range(len1):
+    minmaxrange1=0
+    minrange1=0
+    maxrange1=0
     if (maxvalue1[int1]) < rangeinput:
         minrange1=0
     else:
