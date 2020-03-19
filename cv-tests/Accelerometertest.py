@@ -2,6 +2,7 @@
 import smbus
 import math
 import statistics
+import time
  
 # Register
 power_mgmt_1 = 0x6b
@@ -39,30 +40,31 @@ address = 0x68       # via i2cdetect
  
 bus.write_byte_data(address, power_mgmt_1, 0)
 
-#gyro_xout = read_word_2c(0x43)
-#gyro_yout = read_word_2c(0x45)
-#gyro_zout = read_word_2c(0x47)
+sampleno=100
+
+xcalib=input("input X Calibration value: ")
+xcalib=float(xcalib)
+ycalib=input("input Y Calibration value: ")
+yaclib=float(ycalib)
+timeoftest=input("Input test length (seconds): ")
+timeoftest=int(timeoftest)
+
+for inttime in range(timeoftest):
+    xrot=[]
+    yrot=[]
+
+    for int in range(sampleno):
+        accel_xout = read_word_2c(0x3b)
+        accel_yout = read_word_2c(0x3d)
+        accel_zout = read_word_2c(0x3f)
+        xrot.append(get_x_rotation(accel_xout, accel_yout, accel_zout))
+        yrot.append(get_y_rotation(accel_xout, accel_yout, accel_zout))
  
-#print( "gyro_xout: ", ("%5d" % gyro_xout))
-#print( "gyro_yout: ", ("%5d" % gyro_yout))
-#print( "gyro_zout: ", ("%5d" % gyro_zout))
-
-sampleno=input("input number of samples: ")
-sampleno=int(sampleno)
-
-xrot=[]
-yrot=[]
-
-for int in range(sampleno):
-    accel_xout = read_word_2c(0x3b)
-    accel_yout = read_word_2c(0x3d)
-    accel_zout = read_word_2c(0x3f)
-    xrot.append(get_x_rotation(accel_xout, accel_yout, accel_zout))
-    yrot.append(get_y_rotation(accel_xout, accel_yout, accel_zout))
- 
-xrotation = statistics.median(xrot)
-xrotation = round(xrotation,1)
-yrotation = statistics.median(yrot)
-yrotation = round(yrotation)   
-print("X rotation %f"%(xrotation))
-print("Y rotation %f"%(yrotation))
+    xrotation = statistics.median(xrot)
+    xrotation = round(xrotation,1)
+    xrotation=xrotation+xcalib
+    yrotation = statistics.median(yrot)
+    yrotation = round(yrotation)
+    yrotation=yrotation+ycalib   
+    print("X rotation %f Y Rotation \r"%(xrotation,yrotation),end="")
+    time.sleep(1)
