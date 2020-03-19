@@ -66,5 +66,5 @@ for inttime in range(timeoftest):
     yrotation = statistics.median(yrot)
     yrotation = round(yrotation)
     yrotation=yrotation+ycalib   
-    print("X rotation %f Y Rotation \r"%(xrotation,yrotation),end="")
+    print("X rotation %f Y Rotation %f \r"%(xrotation,yrotation),end="")
     time.sleep(1)
