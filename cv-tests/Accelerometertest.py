@@ -60,5 +60,5 @@ for int in range(sampleno):
     xrot.append(get_x_rotation(accel_xout, accel_yout, accel_zout))
     yrot.append(get_y_rotation(accel_xout, accel_yout, accel_zout))
     
-print("X rotation %f"%(round(statistics.median(xrot))),1)
-print("Y rotation %f"%(round(statistics.median(yrot))),1)
+print("X rotation %f"%(round(statistics.median(xrot)),1))
+print("Y rotation %f"%(round(statistics.median(yrot)),1))
