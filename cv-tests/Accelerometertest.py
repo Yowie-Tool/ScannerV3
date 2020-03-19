@@ -48,7 +48,7 @@ bus.write_byte_data(address, power_mgmt_1, 0)
 #print( "gyro_zout: ", ("%5d" % gyro_zout))
 
 sampleno=input("input number of samples: ")
-smapleno=int(sampleno)
+sampleno=int(sampleno)
 
 xrot=[]
 yrot=[]
