@@ -45,7 +45,7 @@ sampleno=100
 xcalib=input("input X Calibration value: ")
 xcalib=float(xcalib)
 ycalib=input("input Y Calibration value: ")
-yaclib=float(ycalib)
+ycalib=float(ycalib)
 timeoftest=input("Input test length (seconds): ")
 timeoftest=int(timeoftest)
 
