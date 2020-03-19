@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import smbus
 import math
+import statistics
  
 # Register
 power_mgmt_1 = 0x6b
@@ -38,17 +39,26 @@ address = 0x68       # via i2cdetect
  
 bus.write_byte_data(address, power_mgmt_1, 0)
 
-gyro_xout = read_word_2c(0x43)
-gyro_yout = read_word_2c(0x45)
-gyro_zout = read_word_2c(0x47)
+#gyro_xout = read_word_2c(0x43)
+#gyro_yout = read_word_2c(0x45)
+#gyro_zout = read_word_2c(0x47)
  
-print( "gyro_xout: ", ("%5d" % gyro_xout))
-print( "gyro_yout: ", ("%5d" % gyro_yout))
-print( "gyro_zout: ", ("%5d" % gyro_zout))
+#print( "gyro_xout: ", ("%5d" % gyro_xout))
+#print( "gyro_yout: ", ("%5d" % gyro_yout))
+#print( "gyro_zout: ", ("%5d" % gyro_zout))
 
-accel_xout = read_word_2c(0x3b)
-accel_yout = read_word_2c(0x3d)
-accel_zout = read_word_2c(0x3f)
+sampleno=input("input number of samples: ")
+smapleno=int(sampleno)
 
-print ("X Rotation: " , get_x_rotation(accel_xout, accel_yout, accel_zout))
-print ("Y Rotation: " , get_y_rotation(accel_xout, accel_yout, accel_zout))
+xrot=[]
+yrot=[]
+
+for int in range(sampleno):
+    accel_xout = read_word_2c(0x3b)
+    accel_yout = read_word_2c(0x3d)
+    accel_zout = read_word_2c(0x3f)
+    xrot.append(get_x_rotation(accel_xout, accel_yout, accel_zout))
+    yrot.append(get_y_rotation(accel_xout, accel_yout, accel_zout))
+    
+print("X rotation %f"%(statistics.median(xrot)))
+print("Y rotation %f"%(statistics.median(yrot)))
