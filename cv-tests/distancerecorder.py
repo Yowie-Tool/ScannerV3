@@ -135,8 +135,8 @@ def readimages1():
         for int2 in range(minmaxrange1):
             newrange1.append(threshold1[int1,(int2+minrange1)])
         if minrange1 !=0:
-            file.object.write("cam1,")
-            file.obejct.write(str(int1)+",")
+            file_object.write("cam1,")
+            file_object.write(str(int1)+",")
             file_object.write(str(minrange1) + ",")
             lenapp1=len(newrange1)-1
             for int3 in range(lenapp1):
