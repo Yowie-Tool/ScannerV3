@@ -67,18 +67,18 @@ def capture():
     else:
         camera.shutter_speed=0
     laser.on()
-    camera.capture('/media/pi/usbdrive/lon1.jpg','jpeg',use_video_port=True)
+    camera.capture('/media/pi/usbdrive/lon1.jpg','jpeg')
     laser.off()
-    camera.capture('/media/pi/usbdrive/loff1.jpg','jpeg',use_video_port=True)
+    camera.capture('/media/pi/usbdrive/loff1.jpg','jpeg')
     camera2()
     expt=camera.exposure_speed
     if expt < 4000:
         camera.shutter_speed=4000
     else:
         camera.shutter_speed=0
-    camera.capture('/media/pi/usbdrive/lon2.jpg','jpeg',use_video_port=True)
+    camera.capture('/media/pi/usbdrive/lon2.jpg','jpeg')
     laser.off()
-    camera.capture('/media/pi/usbdrive/loff2.jpg','jpeg',use_video_port=True)
+    camera.capture('/media/pi/usbdrive/loff2.jpg','jpeg')
     endtime=time.time()
     timetaken=endtime-starttime
     print("photos captured in %d seconds"%timetaken)
