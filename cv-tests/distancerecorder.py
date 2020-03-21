@@ -121,6 +121,7 @@ def readimages1():
     maxvalue2=np.argmax(threshold2,axis=0)
     
     len1=len(maxvalue1)-2
+    print(len1)
     for int1 in range(len1):
         newrange1.clear()
         if (maxvalue1[int1]) < rangeinput:
