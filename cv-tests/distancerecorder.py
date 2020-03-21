@@ -30,7 +30,8 @@ rangeinput=int(rangeinput)
 #diffuses the maximum value across a certain amount to get rid of anomalies
 radius=5
 #largest metering area available (30% of width of CCD)
-camera.meter_mode='verylong'
+camera.exposure_mode='verylong'
+camera.meter_mode='backlit'
 camera.framerate=4
 #increases colour saturation in camera.
 camera.saturation=50
