@@ -32,7 +32,7 @@ radius=5
 #largest metering area available (30% of width of CCD)
 camera.exposure_mode='verylong'
 camera.meter_mode='backlit'
-camera.framerate=4
+camera.framerate=2
 #increases colour saturation in camera.
 camera.saturation=50
 newrange1=[]
@@ -232,7 +232,7 @@ def readimages2():
         file_object1.write(distancein + "," + materialin + ",")
         file_object1.write(str(minrange1) + ",")
         for int7 in range(minmaxrange1):
-            file_object1.write(str(threshold1[(ysize/2),(int7+minrange1)])+",")
+            file_object1.write(str(threshold1[(int(ysize/2)),(int7+minrange1)])+",")
         file_object1.write(str(maxrange1)+"\n")
         
     if minrange2 !=0:
@@ -240,7 +240,7 @@ def readimages2():
         file_object1.write(distancein + "," + materialin + ",")
         file_object1.write(str(minrange2) + ",")
         for int8 in range(minmaxrange2):
-            file_object1.write(str(threshold2[(ysize/2),(int8+minrange2)])+",")
+            file_object1.write(str(threshold2[(int(ysize/2)),(int8+minrange2)])+",")
         file_object1.write(str(maxrange2)+"\n")
 
     
