@@ -30,7 +30,8 @@ rangeinput=int(rangeinput)
 #diffuses the maximum value across a certain amount to get rid of anomalies
 radius=5
 #largest metering area available (30% of width of CCD)
-camera.meter_mode='backlit'
+camera.meter_mode='verylong'
+camera.framerate=4
 #increases colour saturation in camera.
 camera.saturation=50
 newrange1=[]
@@ -113,15 +114,14 @@ def readimages1():
     retval1,threshold1=cv.threshold(red1,threshamount1,255,cv.THRESH_TOZERO);
     (MinVal1,MaxVal1,MinLoc1,MaxLoc1)=cv.minMaxLoc(threshold1)
     #now find the maximum values in the new thresholded image, by line.
-    maxvalue1=np.argmax(threshold1,axis=0)
+    maxvalue1=np.argmax(threshold1,axis=1)
     (MinVal2,MaxVal2,MinLoc2,MaxLoc2)=cv.minMaxLoc(blur2)
     threshamount2=MaxVal2*threshinput
     retval2,threshold2=cv.threshold(red2,threshamount2,255,cv.THRESH_TOZERO);
     (MinVal2,MaxVal2,MinLoc2,MaxLoc2)=cv.minMaxLoc(threshold2)
-    maxvalue2=np.argmax(threshold2,axis=0)
+    maxvalue2=np.argmax(threshold2,axis=1)
     
-    len1=len(maxvalue1)-2
-    print(len1)
+    len1=len(maxvalue1)-1
     for int1 in range(len1):
         newrange1.clear()
         if (maxvalue1[int1]) < rangeinput:
@@ -145,7 +145,7 @@ def readimages1():
             file_object.write(str(maxrange1)+"\n")
         print ('Cam 1 Current int: [%d] min range [%d] max range [%d]\r'%(int1,minrange1,maxrange1),end="")
 
-    len2=len(maxvalue2)-2
+    len2=len(maxvalue2)-1
     for int4 in range(len2):
         newrange2.clear()
         if (maxvalue2[int4]) < rangeinput:
@@ -196,12 +196,12 @@ def readimages2():
     retval1,threshold1=cv.threshold(red1,threshamount1,255,cv.THRESH_TOZERO);
     (MinVal1,MaxVal1,MinLoc1,MaxLoc1)=cv.minMaxLoc(threshold1)
     #now find the maximum values in the new thresholded image, by line.
-    maxvalue1=np.argmax(threshold1,axis=0)
+    maxvalue1=np.argmax(threshold1,axis=1)
     (MinVal2,MaxVal2,MinLoc2,MaxLoc2)=cv.minMaxLoc(blur2)
     threshamount2=MaxVal2*threshinput
     retval2,threshold2=cv.threshold(red2,threshamount2,255,cv.THRESH_TOZERO);
     (MinVal2,MaxVal2,MinLoc2,MaxLoc2)=cv.minMaxLoc(threshold2)
-    maxvalue2=np.argmax(threshold2,axis=0)
+    maxvalue2=np.argmax(threshold2,axis=1)
     #find the maximum value in the mid line of the camera
     maxpoint1=maxvalue1[(int(ysize/2))]
     maxpoint2=maxvalue2[(int(ysize/2))]
