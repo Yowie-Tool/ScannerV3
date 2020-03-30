@@ -27,12 +27,14 @@ threshinput=input("Enter Camera Threshold: ")
 threshinput=float(threshinput)
 rangeinput=input("Enter Gaussian range in pixels: ")
 rangeinput=int(rangeinput)
+frameinput=input("Enter Framerate (0 for adaptive): ")
+frameinput=int(frameinput)
 #diffuses the maximum value across a certain amount to get rid of anomalies
 radius=5
 #largest metering area available (30% of width of CCD)
 camera.exposure_mode='verylong'
 camera.meter_mode='backlit'
-camera.framerate=2
+camera.framerate=frameinput
 #increases colour saturation in camera.
 camera.saturation=50
 newrange1=[]
@@ -270,8 +272,8 @@ def main():
             print("c -capture images")
             print("r1 - read images - all lines")
             print("r2 - read images - single line with dim and material")
-    camera.close()
     file_object.close
+    camera.close()
 
     
 if __name__ == "__main__":
