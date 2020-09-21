@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#I apolgise for the lack of notes, will update in the coming days. 
 print ("Loading...")
 from tkinter import *
 from gpiozero import LED
@@ -10,6 +11,7 @@ from picamera import PiCamera
 import os
 import sys
 import serial
+#Hopefully the default serial port on pi
 ser=serial.Serial('/dev/ttyS0',9600)#
 ser.flushInput()
 global strrotate
