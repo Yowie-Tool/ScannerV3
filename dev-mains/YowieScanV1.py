@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-#I apolgise for the lack of notes, will update in the coming days. 
-print ("Loading...")
+
 from tkinter import *
 from gpiozero import LED
 import cv2 as cv
@@ -11,41 +10,34 @@ from picamera import PiCamera
 import os
 import sys
 import serial
-#Hopefully the default serial port on pi
-ser=serial.Serial('/dev/ttyS0',9600)#
+#
+ser=serial.Serial('/dev/ttyAMA0',9600)
+#Maybe we should add in some extra lines here to clear it as we found it didn't communicate immediately
 ser.flushInput()
-global strrotate
-global strenable
-global strmicrosteps
-global strencoderres
-global strencoderread
-strenable='e1'
-strmicrosteps='m8'
-strencoderres='z'
-strencoderread='n'
-
+ser.write(('e1/n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
+ser.write(('z/n').encode('utf-8')) #Zeroes the encoder in the stepper
 
 photographs=0
 revolutions=0
-camangle1 = (25.72/(180/math.pi))
-camangled1=(56.81/(180/math.pi))
-Bconst1 = (77.14/(180/math.pi))
+camangle1 = (25.72/(180/math.pi)) #camera 1 Horizontal field of view
+camangled1=(56.81/(180/math.pi)) #camera 1 mounting angle (mounting angle - 1/2 horizontal field of view)
+Bconst1 = (77.14/(180/math.pi)) #ABC triangle constant value, 180 - camera horizontal field of view / 2
 cosB1 = math.cos(Bconst1)
-camangle2 = (79.06/(180/math.pi))
+camangle2 = (79.06/(180/math.pi)) #as above
 camangled2=(8.36/(180/math.pi))
 Bconst2 = (85.82/(180/math.pi))
 cosB2 = math.cos(Bconst2)
-cselect=LED(24)
-cenable1=LED(23)
-cenable2=LED(18)
-laser=LED(13)
-i2c='i2cset -y 1 0x70 0x00 0x04'
-os.system(i2c)
+cselect=LED(24) #select pin on arducam camera switcher
+cenable1=LED(23) #enable pin 1 on arducam camera switcher
+cenable2=LED(18) #enable pin 2 on arducam camera switcher
+laser=LED(13) #temporary laser pin - doesn't currently work?
+i2c='i2cset -y 1 0x70 0x00 0x04' #camera 1 i2c address on arducam camera switcher
+os.system(i2c) #writes it
 cselect.off()
 cenable1.off()
 cenable2.on()
 laser.off()
-camera=PiCamera()
+camera=PiCamera() 
 camera.resolution=(3280,2464)
 
 maxvalue=[]
@@ -76,6 +68,8 @@ scanres=1.2
 xresolution=1080
 
 class Application(Frame):
+    #Tkinter existing GUI. clunky and nasty looking, but does the job.
+    #Scan angle buttons will remain in new version.
     def rotation_angle90(self):
         global scanangle
         scanangle=90
@@ -109,6 +103,7 @@ class Application(Frame):
         self.r360["fg"]="red"
         
     def resolution03(self):
+        #This and the camera resolution will be incorporated into the new GUI - scanres would be the overscan/passes, resolution being the camera resoltuion
         global scanres
         scanres=1
         self.res03["fg"]="red"
@@ -149,25 +144,44 @@ class Application(Frame):
         self.camresmax["fg"]="black"
         self.camresmed["fg"]="black"
         self.camreslow["fg"]="red"
+        
+    def camera1():
+        #arducam camera switching
+        cselect.off()
+        cenable1.off()
+        cenable2.on()
+        i2c='i2cset -y 1 0x70 0x00 0x04'
+        os.system(i2c)
+        
+    def camera2():
+        cselect.off()
+        cenable1.on()
+        cenable2.off()
+        i2c='i2cset -y 1 0x70 0x00 0x06'
+        os.system(i2c)
 
     def startscanning(self):
-        ser.write(strenable.encode('utf-8'))
-        ser.write(strencoderres.encode('utf-8'))
         
         global yresolution
+        #calculates camera y resoltuion based on xresolution from GUI selection. 
         yresolution=int(xresolution/(3280/2464))
         global adjforz1
+        #camera 1 vertical FOV
         adjforz1=((yresolution/2)/(math.tan((19.43/2)/(180/math.pi))))
         global adjforz2
         adjforz2=((yresolution/2)/(math.tan((6.278/2)/(180/math.pi))))
         scanresz=1
         global threshinput
+        #threshold is up to 1, which is proportion of maximum value in array, to get rid of random points
         threshinput=0.2
         global radius
+        #averages maximum value over 5 pixels, to stop maximum value being an anomaly
         radius=5
         global aconst1
+        #constant value in abc triangle where c is xresolution
         aconst1 = (xresolution*(math.sin(Bconst1)))/(math.sin(camangle1))
         global aconstsqrd1
+        #aconst squared
         aconstsqrd1 = math.pow(aconst1,2)
         global aconst2
         aconst2 = (xresolution*(math.sin(Bconst2)))/(math.sin(camangle2))
@@ -177,42 +191,50 @@ class Application(Frame):
         
         global scansteps
         scansteps = round((scanangle/6.28)/scanres)
+        #calculates number of photo sets, 6.28 being the horizontal field of view of the second camera.
         with PiCamera() as camera:
-            camera.start_preview(fullscreen=False,window=(0,0,640,480))
+            camera.start_preview(fullscreen=False,window=(200,80,600,400))
+            #"wakes up" the camera currently selected and displays a window overlay of the live image
             camera.resolution=(xresolution,yresolution)
+            #sets camera resolution (NOT the same as the preview window)
             camera.meter_mode='backlit'
+            #wide light metering for the camera
             camera.saturation=50
+            #upping the saturation of the image - might not need to do with the IR Laser.
             time.sleep(2)
+            #pause for 2 seconds to allow the camera to adjust
             print ("Scan start")
             scanstarttime=time.time()
             global revolutions
             for revolutions in range(scansteps):
+                self.camera1()
+                #select camera1
                 scanstepsstring=str(revolutions)
-                cselect.off()
-                cenable1.off()
-                cenable2.on()
-                i2c='i2cset -y 1 0x70 0x00 0x04'
-                os.system(i2c)
                 expt=camera.exposure_speed
+                #query exposure speed from camera
                 if expt < 4000:
                     camera.shutter_speed=4000
+                    #sets shutter speed to maximum (minimum speed)
                 else:
                     camera.shutter_speed=0
+                    #doesn't override
                 camera.awb_gains=(0,0)
+                #sets white balance to normal - may change this as we are not interested in the RGB values in 2D scanning
                 revnumstr=str(revolutions)
                 loffname='1loff' + revnumstr + '.jpg'
+                #names the image files saved to the SD card so they can be read in sequence
                 camera.capture(loffname,'jpeg',use_video_port=True)
                 lonname='1lon' + revnumstr + '.jpg'
                 laser.on()
+                #turn laser on....
                 camera.awb_gains=(8,0)
+                #sets white balance to enhance red - may alter this as IR appears to be in the blue channel
                 camera.capture(lonname,'jpeg',use_video_port=True)
+                #takes a photo
                 camera.shutter_speed=0
-                laser.off()
-                cselect.off()
-                cenable1.on()
-                cenable2.off()
-                i2c='i2cset -y 1 0x70 0x00 0x06'
-                os.system(i2c)
+                #returns the camera to being able to choose it's own shutter speed, the idea being both images are taken at the same shutter speeds
+                self.camera2()
+                #same as before, but for camera 2
                 expt=camera.exposure_speed
                 if expt < 4000:
                     camera.shutter_speed=4000
@@ -228,9 +250,11 @@ class Application(Frame):
                 camera.capture(lonname,'jpeg',use_video_port=True)
                 camera.shutter_speed=0
                 laser.off()
-                strrotate='c'+ (6.28*scanres)
+                #now rotate the unit - 30 is the gear ratio
+                strrotate='c'+ (6.28*scanres*30)+'\n'
                 ser.write(strrotate.encode('utf-8'))
                 time.sleep(1)
+                #assuming the rotation will take about 1 second... will fiddle with this.
                 if revolutions != 0:
                     rone.append((revolutions)/(180/math.pi))
                 else:
