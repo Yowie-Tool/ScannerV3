@@ -254,36 +254,38 @@ class Application(Frame):
                 strrotate='c'+ (6.28*scanres*30)+'\n'
                 ser.write(strrotate.encode('utf-8'))
                 time.sleep(1)
-                #assuming the rotation will take about 1 second... will fiddle with this.
+                #assuming the rotation will take about 1 second... eventually we want it to just wait for a signal from the stepper that it's fully moved
                 if revolutions != 0:
                     rone.append((revolutions)/(180/math.pi))
                 else:
                     rone.append(0)
+                #makes an array of how far we've moved each time, to use in the calculations later
                 rtwo.append(0)
+                #think we don't need this, this is for the 3d scan, will double check.
         global scanendtime
         scanendtime=time.time()
         camera.close
+        #shuts the camera off
         print("Photographic scan completed in %f seconds" % (int(scanendtime-scanstarttime)))
         self.readimages()
         
     
         
     def saveoutput(self):
-        fileoutput = "Example.pts"
+        fileoutput = "RoomReaderScan.pts"
+        #currently only one file name. 
         fileoutputtype = "w"
         file_object = open(fileoutput,fileoutputtype)
 
         print ("Scan ended, saving")
         exportint = len(xdist)
+        #currently based on length of x array. Will change to a 2D or 3D array at some point to make the array smaller, as won't have to include 0 values.
     
         for export in range (exportint):
+            #I've deleted Z and RGB from this now. exports just a text file with X,Y coordinates
             xout = str(xdist[export])
             yout = str(ydist[export])
-            zout = str(zdist[export])
-            rout = str(rpix[export])
-            gout=str(gpix[export])
-            bout=str(bpix[export])
-            file_object.write(xout + " " + yout + " " + zout + " " + rout + " " + gout + " " + bout + "\n")
+            file_object.write(xout + " " + yout + "\n")
 
         file_object.close()
         
@@ -292,9 +294,6 @@ class Application(Frame):
         sys.exit()
 
     def readimages(self):
-        #while revolutions==0:
-            #time.sleep(0.001)
-        #global photographs
         
         for photographs in range(scansteps):
             pnumstr=str(photographs)
@@ -302,21 +301,31 @@ class Application(Frame):
             lonname1='1lon'+pnumstr + '.jpg'
             loffname2='2loff' + pnumstr + '.jpg'
             lonname2='2lon'+pnumstr + '.jpg'
+            #There is a way of taking photo's directly into opencv as an array, but previous attempts at this have been unsuccesful, it seems this only works at low resolutions.
             loff1=cv.imread(loffname1)
             lon1=cv.imread(lonname1)
             src1=cv.subtract(lon1,loff1)
+            #subtract the laser on image from the laser off image. In theory, when we lock down the camera settings between the two photos, we should end up with just the laser line left. In practice, there is extra interference involved. 
             loff2=cv.imread(loffname2)
             lon2=cv.imread(lonname2)
             src2=cv.subtract(lon2,loff2)
             red1=cv.cvtColor(src1,cv.COLOR_BGR2GRAY)
+            #extract just the red array, used with the visible laser. When we switch to IR, we might change to another channel.
             blur1=cv.GaussianBlur(red1,(5,5),0)
+            #create a blurred image to find the maximum value from. This means that any anomalies are removed
             (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(blur1)
+            #find the location of minimum and maximum values in the image
             threshamount = maxVal*threshinput
+            #create a value that will remove any values below that, which is a proportion of the maximum value
             retval, threshold = cv.threshold(red1, threshamount, 255, cv.THRESH_TOZERO);
+            #this then removes those from the image
             (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(threshold)
+            #find the maximum value of the non blurred image
             maxvalue1 = np.argmax(threshold,axis=1)
+            #Now find the maximum value in each column. We will change this to the mean value of the gaussian curve, to try and get the best fit for the laser line, which has gaussian distribution
             os.remove(loffname1)
             os.remove(lonname1)
+            #Delete the image files, to save space
             succesful=0
             for i in range(yresolution):
                 xcolumn=maxvalue1[i]
@@ -334,10 +343,12 @@ class Application(Frame):
                 else:
                     pxadd=threshold[i,((maxvalue1[i]))]
                 if xcolumn > 0 and pxminus !=0 and pxadd !=0 and pyplus!=0 and pyminus !=0:
+                    #This checks that where the maximum value is, there are other bright pixels around it, which we can hopefully get rid of when we move to the alternative method of laser line centre calculation
                     cam1out.append(xcolumn)
                     succesful=succesful+1
                     
             numlines.append(succesful)
+            #This is just for the users benefit, shows how many points the unit has captured succefully
             red2=cv.cvtColor(src2,cv.COLOR_BGR2GRAY)
             blur2=cv.GaussianBlur(red2,(5,5),0)
             (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(blur2)
@@ -368,7 +379,7 @@ class Application(Frame):
                     succesful=succesful+1
                     
             numlines.append(succesful)
-            
+            #And then do it all again for camera 2
                 
         global readimageendtime
         readimageendtime=time.time()
@@ -377,10 +388,8 @@ class Application(Frame):
                 
 
     def calculatepoints(self):
-        
+        #Ok, this bit needs updating, it's currently for the 3d version which rotated around an axis which was between the camera and the laser
         tlines=0
-        #while photographs==0:
-            #time.sleep(0.001)
         for calculations in range(scansteps):
             readlines=numlines[calculations]
             for yint in range(readlines):
