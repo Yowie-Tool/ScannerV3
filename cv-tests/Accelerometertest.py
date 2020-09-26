@@ -70,4 +70,4 @@ for inttime in range(timeoftest):
     print("X rotation %f Y Rotation %f \r"%(xrotation,yrotation),end="")
     time.sleep(1)
 
-println("End of test")    
+print("End of test")    
