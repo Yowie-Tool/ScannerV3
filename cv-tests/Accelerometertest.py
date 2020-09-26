@@ -3,6 +3,7 @@ import smbus
 import math
 import statistics
 import time
+from twisted.python.util import println
  
 # Register
 power_mgmt_1 = 0x6b
@@ -68,3 +69,5 @@ for inttime in range(timeoftest):
     yrotation=yrotation+ycalib   
     print("X rotation %f Y Rotation %f \r"%(xrotation,yrotation),end="")
     time.sleep(1)
+
+println("End of test")    
