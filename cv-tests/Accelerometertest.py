@@ -61,10 +61,10 @@ for inttime in range(timeoftest):
         yrot.append(get_y_rotation(accel_xout, accel_yout, accel_zout))
  
     xrotation = statistics.median(xrot)
-    xrotation = round(xrotation,1)
+    xrotation = round(xrotation,2)
     xrotation=xrotation+xcalib
     yrotation = statistics.median(yrot)
-    yrotation = round(yrotation)
+    yrotation = round(yrotation,2)
     yrotation=yrotation+ycalib   
     print("X rotation %f Y Rotation %f \r"%(xrotation,yrotation),end="")
     time.sleep(1)
