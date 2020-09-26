@@ -3,7 +3,6 @@ import smbus
 import math
 import statistics
 import time
-from twisted.python.util import println
  
 # Register
 power_mgmt_1 = 0x6b
