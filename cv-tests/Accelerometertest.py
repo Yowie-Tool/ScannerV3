@@ -40,7 +40,7 @@ address = 0x69       # via i2cdetect
  
 bus.write_byte_data(address, power_mgmt_1, 0)
 
-sampleno=100
+sampleno=250
 
 xcalib=input("input X Calibration value: ")
 xcalib=float(xcalib)
