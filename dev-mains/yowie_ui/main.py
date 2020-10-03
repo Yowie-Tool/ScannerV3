@@ -4,6 +4,8 @@ from datetime import datetime
 import os.path
 from os import path
 
+os.environ['KIVY_WINDOW'] = 'sdl2'
+
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
