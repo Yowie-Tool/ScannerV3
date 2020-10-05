@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from tkinter import *
-from gpiozero import LED
+import RPi.GPIO as GPIO
 import cv2 as cv
 import numpy as np
 import math
@@ -10,12 +10,22 @@ from picamera import PiCamera
 import os
 import sys
 import serial
-#
+import smbus
+import statistics
+
+
 ser=serial.Serial('/dev/ttyAMA0',9600)
-#Maybe we should add in some extra lines here to clear it as we found it didn't communicate immediately
-ser.flushInput()
-ser.write(('e1/n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
-ser.write(('z/n').encode('utf-8')) #Zeroes the encoder in the stepper
+ser.flush()
+ser.write(("\n\n").encode("utf-8"))
+ser.write(("e1\n").encode("utf-8")) #Enables the stepper motor driver, turns out the program light.
+ser.write(("z\n").encode("utf-8")) #Zeroes the encoder in the stepper
+power_mgmt_1 = 0x6b
+power_mgmt_2 = 0x6c
+bus = smbus.SMBus(1) # bus = smbus.SMBus(0) 
+address = 0x69       # MPU6050 Accelerometer address
+bus.write_byte_data(address, power_mgmt_1, 0)
+
+sampleno=100 #Gyroscope samples, need an average or it goes all over the place. Brief testing showed that 100 was nice and consistent
 
 photographs=0
 revolutions=0
@@ -27,16 +37,16 @@ camangle2 = (79.06/(180/math.pi)) #as above
 camangled2=(8.36/(180/math.pi))
 Bconst2 = (85.82/(180/math.pi))
 cosB2 = math.cos(Bconst2)
-cselect=LED(24) #select pin on arducam camera switcher
-cenable1=LED(23) #enable pin 1 on arducam camera switcher
-cenable2=LED(18) #enable pin 2 on arducam camera switcher
-laser=LED(13) #temporary laser pin - doesn't currently work?
+GPIO.setmode(GPIO.BOARD)
+chan_listc=[12,16,18] #camera switcher pins
+chan_listl=[29,31,33] #laser pins
+GPIO.setup(chan_listc, GPIO.OUT)
+GPIO.setup(chan_listl, GPIO.OUT)
+GPIO.output(chan_listl,0)
 i2c='i2cset -y 1 0x70 0x00 0x04' #camera 1 i2c address on arducam camera switcher
 os.system(i2c) #writes it
-cselect.off()
-cenable1.off()
-cenable2.on()
-laser.off()
+GPIO.output(chan_listc,(1,0,0))
+
 camera=PiCamera() 
 camera.resolution=(3280,2464)
 
@@ -61,7 +71,8 @@ cam2outplusy=[]
 cam2outminusy=[]
 rone=[]
 rtwo=[]
-
+xcalib=87.2 # gyroscope calibration values, just rough for the moment based on a quick level of the unit. Will need doing again
+ycalib=2
 
 scanangle=90
 scanres=1.2
@@ -150,6 +161,7 @@ class Application(Frame):
         cselect.off()
         cenable1.off()
         cenable2.on()
+        GPIO.output(chan_listc, (1,0,0))
         i2c='i2cset -y 1 0x70 0x00 0x04'
         os.system(i2c)
         
@@ -157,6 +169,7 @@ class Application(Frame):
         cselect.off()
         cenable1.on()
         cenable2.off()
+        GPIO.output(chan_listc, (0,1,0))
         i2c='i2cset -y 1 0x70 0x00 0x06'
         os.system(i2c)
 
@@ -225,13 +238,14 @@ class Application(Frame):
                 #names the image files saved to the SD card so they can be read in sequence
                 camera.capture(loffname,'jpeg',use_video_port=True)
                 lonname='1lon' + revnumstr + '.jpg'
-                laser.on()
+                GPIO.output(chan_listl, (0,0,1))
                 #turn laser on....
                 camera.awb_gains=(8,0)
                 #sets white balance to enhance red - may alter this as IR appears to be in the blue channel
                 camera.capture(lonname,'jpeg',use_video_port=True)
                 #takes a photo
                 camera.shutter_speed=0
+                GPIO.output(chan_listl, (0,0,0))
                 #returns the camera to being able to choose it's own shutter speed, the idea being both images are taken at the same shutter speeds
                 self.camera2()
                 #same as before, but for camera 2
@@ -245,11 +259,11 @@ class Application(Frame):
                 loffname='2loff' + revnumstr + '.jpg'
                 camera.capture(loffname,'jpeg',use_video_port=True)
                 lonname='2lon' + revnumstr + '.jpg'
-                laser.on()
+                GPIO.output(chan_listl, (0,0,1))
                 camera.awb_gains=(8,0)
                 camera.capture(lonname,'jpeg',use_video_port=True)
                 camera.shutter_speed=0
-                laser.off()
+                GPIO.output(chan_listl, (0,0,0))
                 #now rotate the unit - 30 is the gear ratio
                 strrotate='c'+ (6.28*scanres*30)+'\n'
                 ser.write(strrotate.encode('utf-8'))
