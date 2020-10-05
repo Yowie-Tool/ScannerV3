@@ -30,6 +30,7 @@ int microsteps1 = 16; // Number of microsteps
 int calculstep1; // integer for number of steps from degree input - stepper 1
 int stpspd = 500; // Time between steps (microseconds)
 int stpdir = 0; // Step Horizontal Mirror direction
+int encdir = 0; //encoder counting direction
 
 const byte numChars = 10;
 char receivedChars[numChars]; // an array to store the received data
@@ -56,7 +57,7 @@ void setup() {
   Serial.begin(9600);   // Open serial port 
   Serial.flush();       // Clear receive buffer.
   mysensor.begin();     // Start the encoder
-  mysensor.setClockWise(false); //set anticlockwise counting (so it will count the same way as the stepper rotates, which will then be clockwise when geared)
+  mysensor.setClockWise(true); 
 }
 
 void loop() {
@@ -148,6 +149,19 @@ void UseData() {
         stpdir=0;
 		Serial.println("Direction Standard");
         }
+		
+	   case 'R': // Mirror encoder direction if needed. 
+       case 'r':
+        if (numstring==1) {
+        encdir=1;
+		mysensor.setClockWise(false);
+		Serial.println("Encoder Anticlockwise");		
+        }
+        else {
+        encdir=0;
+		mysensor.setClockWise(true);
+		Serial.println("Encoder Clockwise");		
+        }
         
         break;
         
@@ -171,6 +185,9 @@ void UseData() {
         Serial.println();
         Serial.println("Microsteps: ");
         Serial.print(microsteps1);
+        Serial.println();
+		Serial.println("Encoder Mirrorstate: ");
+        Serial.print(encdir);
         Serial.println();
         break;
 
