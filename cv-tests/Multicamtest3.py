@@ -3,12 +3,13 @@ import os
 from picamera import PiCamera
 import time
 chan_listc=[12,16,18] #camera switcher pins
+chan_listl=[29,31,33] #laser pins
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(chan_listc, GPIO.OUT)
+GPIO.setup(chan_listl, GPIO.OUT)
 i2c='i2cset -y 1 0x70 0x00 0x04'
 os.system(i2c)
 GPIO.output(chan_listc,(1,0,0))
-chan_listl=[29,31,33] #laser pins
 GPIO.output(chan_listl,0)
 camera=PiCamera()
 camera.resolution=(640,480)
