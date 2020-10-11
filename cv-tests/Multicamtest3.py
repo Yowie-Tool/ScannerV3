@@ -46,7 +46,7 @@ def capture():
     print("captured in %d seconds"%(endtime-starttime))
     
 def laserc():
-    GPIO.output(self.chan_listl,1)
+    GPIO.output(chan_listl,1)
     
 def main():
     userin=""
