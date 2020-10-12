@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import os
 from picamera import PiCamera
 import time
-import opencv as cv
+import cv2 as cv
 import numpy as np
 chan_listc=[12,16,18] #camera switcher pins
 chan_listl=[29,31,33] #laser pins
