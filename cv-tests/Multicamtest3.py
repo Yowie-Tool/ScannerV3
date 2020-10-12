@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import os
 from picamera import PiCamera
 import time
+import opencv as cv
+import numpy as np
 chan_listc=[12,16,18] #camera switcher pins
 chan_listl=[29,31,33] #laser pins
 GPIO.setmode(GPIO.BOARD)
@@ -37,16 +39,37 @@ def cstop():
     camera.stop_preview()
     
 def capture():
-    global capnum
+    
     camera.resolution=(3280,2464)
     starttime=time.time()
-    camera.capture('capture%d.jpg'%capnum,'jpeg',use_video_port=True)
-    capnum=capnum+1
+    GPIO.output(chan_listl,0)
+    camera.capture('loff.jpeg',use_video_port=True)
+    GPIO.output(chan_listl,1)
+    camera.capture('lon.jpeg',use_video_port=True)
+    GPIO.output(chan_listl,0)
     endtime=time.time()
     print("captured in %d seconds"%(endtime-starttime))
+    starttime=time.time()
+    loff=cv.imread('loff.jpeg')
+    lon=cv.imread('lon.jpeg')
+    src=cv.subtract(lon,loff)
+    linebw=(src,cv.COLOR_BGR2GRAY)
+    liner=src[:,:,2]
+    lineg=src[:,:,1]
+    lineb=src[:,:,0]
+    cv.imwrite('BandW.jpg',linebw)
+    cv.imwrite('Red.jpg',liner)
+    cv.imwrite('Green.jpg',lineg)
+    cv.imwrite('Blue.jpg',lineb)
+    endtime=time.time()
+    print("images read and saved %d seconds"%(endtime-starttime))
+    
     
 def laserc():
     GPIO.output(chan_listl,1)
+    
+def laseroff():
+    GPIO.output(chan_listl,0)
     
 def main():
     userin=""
@@ -64,8 +87,10 @@ def main():
             ccheck()
         if userin=='cap':
             capture()
-        if userin=='l':
+        if userin=='l1':
             laserc()
+        if userin =='l0':
+            laseroff()
         if userin=='h':
             print ("c1 - select camera 1")
             print ("c3 - select camera 3")
