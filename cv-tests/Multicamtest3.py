@@ -53,7 +53,7 @@ def capture():
     loff=cv.imread('loff.jpeg')
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
-    linebw=(src,cv.COLOR_BGR2GRAY)
+    linebw=cv.cvtColor(src,cv.COLOR_BGR2GRAY)
     liner=src[:,:,2]
     lineg=src[:,:,1]
     lineb=src[:,:,0]
