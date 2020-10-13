@@ -10,7 +10,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 GPIO.setup(chan_listc, GPIO.OUT)
 GPIO.setup(chan_listl, GPIO.OUT)
-i2c='i2cset -y 1 0x70 0x00 0x04'
+i2c='i2cset -y 4 0x70 0x00 0x04'
 os.system(i2c)
 GPIO.output(chan_listc,(1,0,0))
 GPIO.output(chan_listl,0)
@@ -20,12 +20,12 @@ capnum=0
 
 def camera1():
     GPIO.output(chan_listc,(1,0,0))
-    i2c='i2cset -y 1 0x70 0x00 0x04'
+    i2c='i2cset -y 4 0x70 0x00 0x04'
     os.system(i2c)
     
 def camera3():
     GPIO.output(chan_listc,(0,1,0))
-    i2c='i2cset -y 1 0x70 0x00 0x06'
+    i2c='i2cset -y 4 0x70 0x00 0x06'
     os.system(i2c)    
 
 def ccheck():
