@@ -10,6 +10,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 GPIO.setup(chan_listc, GPIO.OUT)
 GPIO.setup(chan_listl, GPIO.OUT)
+i2c='i2cset -y 1 0x70 0x00 0x04'
 try:
     os.system(i2c)
 except:
@@ -22,19 +23,20 @@ camera.resolution=(640,480)
 capnum=0
 
 def camera1():
-    GPIO.output(chan_listc,(1,0,0))
     i2c='i2cset -y 1 0x70 0x00 0x04'
     try:
         os.system(i2c)
     except:
         print("i2c switch failed")
+    GPIO.output(chan_listc,(1,0,0))
+    
 def camera3():
-    GPIO.output(chan_listc,(0,1,0))
     i2c='i2cset -y 1 0x70 0x00 0x06'
     try:
         os.system(i2c)
     except:
-        print("i2c switch failed") 
+        print("i2c switch failed")
+    GPIO.output(chan_listc,(0,1,0)) 
 
 def ccheck():
     camera._check_camera_open()
