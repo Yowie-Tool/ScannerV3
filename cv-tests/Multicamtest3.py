@@ -64,10 +64,10 @@ def capture():
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
     lineb=src[:,:,0]
-    lur=GaussianBlur(blue,(5,5),0)
-    (minVal, maxVal, MinLoc, maxLoc) = minMaxLoc(blur)
+    lur=cv.GaussianBlur(blue,(5,5),0)
+    (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(blur)
     threshamount = maxVal*0.2
-    retval, threshold_ar = threshold(blue, threshamount, 255, THRESH_TOZERO);
+    retval, threshold_ar = cv.threshold(blue, threshamount, 255, cv.THRESH_TOZERO);
     maxvalue = np.argmax(threshold_ar,axis=1)
     row, col = threshold_ar.shape
     text_file=open("output.txt","wt")
