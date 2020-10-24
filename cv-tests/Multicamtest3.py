@@ -63,14 +63,20 @@ def capture():
     loff=cv.imread('loff.jpeg')
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
-    linebw=cv.cvtColor(src,cv.COLOR_BGR2GRAY)
-    liner=src[:,:,2]
-    lineg=src[:,:,1]
     lineb=src[:,:,0]
-    cv.imwrite('BandW.jpg',linebw)
-    cv.imwrite('Red.jpg',liner)
-    cv.imwrite('Green.jpg',lineg)
-    cv.imwrite('Blue.jpg',lineb)
+    lur=GaussianBlur(blue,(5,5),0)
+    (minVal, maxVal, MinLoc, maxLoc) = minMaxLoc(blur)
+    threshamount = maxVal*0.2
+    retval, threshold_ar = threshold(blue, threshamount, 255, THRESH_TOZERO);
+    maxvalue = np.argmax(threshold_ar,axis=1)
+    row, col = threshold_ar.shape
+    text_file=open("output.txt","wt")
+    for i in range(row):
+        if maxvalue[i] != 0:
+            for i2 in range(column):
+                text_file.write(str(threshold_ar[i,i2]) + ",")
+            text_file.write("\n")
+    text_file.close()
     endtime=time.time()
     print("images read and saved %d seconds"%(endtime-starttime))
     
