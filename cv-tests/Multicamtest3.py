@@ -64,7 +64,7 @@ def capture():
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
     blue=src[:,:,0]
-    lur=cv.GaussianBlur(blue,(5,5),0)
+    blur=cv.GaussianBlur(blue,(5,5),0)
     (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(blur)
     threshamount = maxVal*0.2
     retval, threshold_ar = cv.threshold(blue, threshamount, 255, cv.THRESH_TOZERO);
