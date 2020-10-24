@@ -73,7 +73,7 @@ def capture():
     text_file=open("output.txt","wt")
     for i in range(row):
         if maxvalue[i] != 0:
-            for i2 in range(column):
+            for i2 in range(col):
                 text_file.write(str(threshold_ar[i,i2]) + ",")
             text_file.write("\n")
     text_file.close()
