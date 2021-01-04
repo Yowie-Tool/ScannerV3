@@ -63,11 +63,12 @@ def capture():
         calibb=calib[:,:,0]
         (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
         maxvalueinit=maxVal
-        shutterspeed=shutterspeed+1
-        print("shutter speed %d" %(shutterspeed)) 
+        shutterspeed=shutterspeed+5
+        print("shutter speed %d max value %d" %(shutterspeed,maxvalueinit)) 
     camera.resolution=(3280,2464)
     starttime=time.time()
     GPIO.output(chan_listl,0)
+    print("main capture start")
     camera.capture('loff.jpeg',use_video_port=True)
     GPIO.output(chan_listl,1)
     camera.capture('lon.jpeg',use_video_port=True)
