@@ -50,7 +50,7 @@ def cstop():
     camera.stop_preview()
     
 def capture():
-    camera.resolution=(320,240)
+    camera.resolution=(3280,100)
     shutterspeed=1
     maxvalueinit=0
     GPIO.output(chan_listl,1)
