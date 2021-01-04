@@ -21,8 +21,7 @@ GPIO.output(chan_listl,0)
 camera=PiCamera()
 camera.resolution=(640,480)
 capnum=0
-shutterspeed=1
-maxvalue=0
+
 
 def camera1():
     i2c='i2cset -y 1 0x70 0x00 0x04'
@@ -52,16 +51,18 @@ def cstop():
     
 def capture():
     camera.resolution=(320,240)
+    shutterspeed=1
+    maxvalueinit=0
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
     camera.iso=100
-    while maxvalue<255:
+    while maxvalueinit<255:
         camera.shutter_speed=shutterspeed
         camera.capture('lcalib.jpeg',use_video_port=True)
         calib=cv.imread('lcalib.jpeg')
         calibb=calib[:,:,0]
         (minVal, maxVal, MinLoc, maxLoc) = minMaxLoc(calibb)
-        maxvalue=maxVal
+        maxvalueinit=maxVal
         shutterspeed=shutterspeed+1
     print("shutter speed %d" %(shutterspeed))    
     camera.resolution=(3280,2464)
