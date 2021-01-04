@@ -78,7 +78,8 @@ def capture():
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
     blue=src[:,:,0]
-    threshamount = 50
+    threshamount = input("Enter threshold amount 1-255: ")
+    threshamount = int(threshamount)
     retval, threshold_ar = cv.threshold(blue, threshamount, 255, cv.THRESH_TOZERO);
     maxvalue = np.argmax(threshold_ar,axis=1)
     row, col = threshold_ar.shape
