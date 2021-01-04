@@ -61,7 +61,7 @@ def capture():
         camera.capture('lcalib.jpeg',use_video_port=True)
         calib=cv.imread('lcalib.jpeg')
         calibb=calib[:,:,0]
-        (minVal, maxVal, MinLoc, maxLoc) = minMaxLoc(calibb)
+        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
         maxvalueinit=maxVal
         shutterspeed=shutterspeed+1
     print("shutter speed %d" %(shutterspeed))    
