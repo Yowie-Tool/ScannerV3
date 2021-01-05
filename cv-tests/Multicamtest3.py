@@ -97,7 +97,7 @@ def capture():
     srcone=src[:,:,colour]
     threshamount = input("Enter threshold amount 1-255: ")
     threshamount = int(threshamount)
-    retval, threshold_ar = cv.threshold(blue, threshamount, 255, cv.THRESH_TOZERO);
+    retval, threshold_ar = cv.threshold(srcone, threshamount, 255, cv.THRESH_TOZERO);
     maxvalue = np.argmax(threshold_ar,axis=1)
     row, col = threshold_ar.shape
     text_file=open("output.txt","wt")
