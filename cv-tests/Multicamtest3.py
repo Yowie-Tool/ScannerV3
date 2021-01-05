@@ -50,7 +50,7 @@ def cstop():
     camera.stop_preview()
     
 def capture():
-    camera.resolution=(3280,50)
+    camera.resolution=(1786,50)
     shutterspeed=1
     maxvalueinit=0
     GPIO.output(chan_listl,1)
@@ -66,11 +66,7 @@ def capture():
         (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
         maxvalueinit=maxVal
         shutterspeed=shutterspeed+5
-        analog=camera.analog_gain
-        analogg=float(analog)
-        digitalg=camera.digital_gain
-        digitalg=float(digitalg)
-        print("shutter speed %d max value %d analog gain %f digital gain %f" %(shutterspeed,maxvalueinit,analogg,digitalg)) 
+        print("shutter speed %d max value %d" %(shutterspeed,maxvalueinit)) 
     camera.resolution=(3280,2464)
     starttime=time.time()
     GPIO.output(chan_listl,0)
