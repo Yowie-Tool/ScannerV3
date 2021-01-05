@@ -88,9 +88,9 @@ def capture():
     loff=cv.imread('loff.jpeg')
     lon=cv.imread('lon.jpeg')
     src=cv.subtract(lon,loff)
-    if maxvalueinit=maxvalb:
+    if maxvalueinit==maxvalb:
         colour=0
-    if maxvalueinit=maxvalg:
+    if maxvalueinit==maxvalg:
         colour=1
     else:
         colour=2
