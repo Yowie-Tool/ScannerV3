@@ -4,6 +4,11 @@ from picamera import PiCamera
 import time
 import cv2 as cv
 import numpy as np
+import serial
+s=serial.Serial('/dev/ttyAMA0',9600, timeout = 6, writeTimeout = 20)
+s.flushInput()  # Flush startup text in serial input
+s.write(('\n\n').encode('utf-8'))
+
 chan_listc=[12,16,18] #camera switcher pins
 chan_listl=[29,31,33] #laser pins
 GPIO.setmode(GPIO.BOARD)
@@ -193,11 +198,14 @@ def shutterspeedcalc():
     print("")
         
 def shutterspeedcalcfull():
+    s.write(('e1\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
+    s.write(('z\n').encode('utf-8')) #Zeroes the encoder in the stepper
     global maxvalueinit
     global maxvalb
     global maxvalg
     global maxvalr
-    shutterout=[]
+    shutteroutline=[]
+    shutteroutcomplete=[]
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
     camera.awb_mode='off'
@@ -208,46 +216,43 @@ def shutterspeedcalcfull():
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
     resinput=1
-    while resinput<9:
-        if resinput ==1:
-            camera.resolution=(320,240)
-        if resinput ==2:
-            camera.resolution=(640,480)
-        if resinput ==3:
-            camera.resolution=(1280,720)
-        if resinput ==4:
-            camera.resolution=(1640,1232)
-        if resinput ==5:
-            camera.resolution=(3280,2464)
-        if resinput ==6:
-            camera.resolution=(500,50)
-        if resinput ==7:
-            camera.resolution=(1000,50)
-        if resinput ==8:
-            camera.resolution=(1786,50)    
-        shutterspeed=1
-        camera.shutter_speed=shutterspeed
-        time.sleep(1)
-        maxvalueinit=0
-        while maxvalueinit<inputmax:
+    for rotation in range(7):
+        while resinput<6:
+            if resinput ==1:
+                camera.resolution=(1280,720)
+            if resinput ==2:
+                camera.resolution=(1640,1232)
+            if resinput ==3:
+                camera.resolution=(3280,2464)
+            if resinput ==4:
+                camera.resolution=(1000,50)
+            if resinput ==5:
+                camera.resolution=(1786,50)   
+            shutterspeed=1
             camera.shutter_speed=shutterspeed
-            camera.capture('lcalib.jpeg',use_video_port=True)
-            calib=cv.imread('lcalib.jpeg')
-            calibb=calib[:,:,0]
-            calibg=calib[:,:,1]
-            calibr=calib[:,:,2]
-            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
-            maxvalb=maxVal
-            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibg)
-            maxvalg=maxVal
-            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibr)
-            maxvalr=maxVal
-            maxvalueinit=max(maxvalb,maxvalg,maxvalr)
-            shutterspeed=shutterspeed+25
-            print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
-        shutterout.append(shutterspeed)
-        resinput=resinput+1
+            time.sleep(1)
+            maxvalueinit=0
+            while maxvalueinit<inputmax:
+                camera.shutter_speed=shutterspeed
+                camera.capture('lcalib.jpeg',use_video_port=True)
+                calib=cv.imread('lcalib.jpeg')
+                calibb=calib[:,:,0]
+                calibg=calib[:,:,1]
+                calibr=calib[:,:,2]
+                (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
+                maxvalb=maxVal
+                (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibg)
+                maxvalg=maxVal
+                (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibr)
+                maxvalr=maxVal
+                maxvalueinit=max(maxvalb,maxvalg,maxvalr)
+                shutterspeed=shutterspeed+25
+                print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
+            shutteroutline.append(shutterspeed)
+            resinput=resinput+1
+            s.write(('a450\n').encode('utf-8'))
+        shutterout.append(shutteroutline)
     print("Shutter speeds in order: ", shutterout)
-     
+    s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
 if __name__ == "__main__":
     main()
