@@ -198,8 +198,7 @@ def shutterspeedcalcfull():
     global maxvalg
     global maxvalr
     shutterout=[]
-    shutterspeed=1
-    camera.shutter_speed=shutterspeed
+
     maxvalueinit=0
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
@@ -229,6 +228,8 @@ def shutterspeedcalcfull():
         if resinput ==8:
             camera.resolution=(1786,50)    
         shutterspeed=1
+        camera.shutter_speed=shutterspeed
+        time.wait(1)
         while maxvalueinit<inputmax:
             camera.shutter_speed=shutterspeed
             camera.capture('lcalib.jpeg',use_video_port=True)
@@ -244,7 +245,7 @@ def shutterspeedcalcfull():
             maxvalr=maxVal
             maxvalueinit=max(maxvalb,maxvalg,maxvalr)
             shutterspeed=shutterspeed+25
-            print('shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
+            print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
         shutterout.append(shutterspeed)
         resinput=resinput+1
     print("Shutter speeds in order: ", shutterout)
