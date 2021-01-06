@@ -204,7 +204,7 @@ def shutterspeedcalcfull():
     global maxvalb
     global maxvalg
     global maxvalr
-    shutteroutline=[]
+
     shutterout=[]
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
@@ -215,8 +215,8 @@ def shutterspeedcalcfull():
     camera.iso=100
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
-    resinput=1
     for rotation in range(3):
+        resinput=1
         while resinput<6:
             if resinput ==1:
                 camera.resolution=(1280,720)
@@ -232,6 +232,7 @@ def shutterspeedcalcfull():
             camera.shutter_speed=shutterspeed
             time.sleep(1)
             maxvalueinit=0
+            shutteroutline=[]
             while maxvalueinit<inputmax:
                 camera.shutter_speed=shutterspeed
                 camera.capture('lcalib.jpeg',use_video_port=True)
@@ -251,6 +252,7 @@ def shutterspeedcalcfull():
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
         s.write(('a900\n').encode('utf-8'))
+        time.sleep(10)
         shutterout.append(shutteroutline)
     print("Shutter speeds in order: ", shutterout)
     s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
