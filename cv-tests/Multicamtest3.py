@@ -204,7 +204,11 @@ def shutterspeedcalcfull():
     global maxvalb
     global maxvalg
     global maxvalr
-
+    fullres=input("Full resolution?(y/n): ")
+    if fullres !="y":
+        resstart=2
+    else:
+        resstart=1
     shutterout=[]
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
@@ -216,7 +220,7 @@ def shutterspeedcalcfull():
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
     for rotation in range(8):
-        resinput=1
+        resinput=resstart
         shutteroutline=[]
         while resinput<6:
             if resinput ==1:
@@ -257,8 +261,21 @@ def shutterspeedcalcfull():
         shutterout.append(shutteroutline)
     print("")
     #print("Shutter speeds in order: ", shutterout)
-    print("mean of shutter speeds by resolution: ",np.mean(shutterout,axis=0))
-    print("max of shutter speeds by resolution: ",np.nanmax(shutterout,axis=0))
+    shutmin=np.nanmin(shutterout,axis=0)
+    shutmean=np.nanmin(shutterout,axis=0)
+    shutmax=np.nanmax(shutterout,axis=0)
+    print("min of shutter speeds by resolution: ",shutmin)
+    print("mean of shutter speeds by resolution: ",shutmean)
+    print("max of shutter speeds by resolution: ",shutmax)
+    if resstart==1:
+        print("3/4 of slice photo1 min: ",((shutmin[3])*0.75))
+        print("3/4 of slice photo1 mean: ",((shutmean[3])*0.75))
+        print("3/4 of slice photo1 max: ",((shutmax[3])*0.75))
+    else:
+        print("3/4 of slice photo1 min: ",((shutmin[2])*0.75))
+        print("3/4 of slice photo1 mean: ",((shutmean[2])*0.75))
+        print("3/4 of slice photo1 max: ",((shutmax[2])*0.75))
+        
     s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
 if __name__ == "__main__":
     main()
