@@ -253,7 +253,7 @@ def shutterspeedcalcfull():
                 maxvalr=maxVal
                 maxvalueinit=max(maxvalb,maxvalg,maxvalr)
                 shutterspeed=shutterspeed+25
-                print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d] rotation [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr,rotation),end="")     
+                print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d] rotation [%d]             \r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr,rotation),end="")     
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
         s.write(('a450\n').encode('utf-8'))
@@ -262,7 +262,7 @@ def shutterspeedcalcfull():
     print("")
     #print("Shutter speeds in order: ", shutterout)
     shutmin=np.nanmin(shutterout,axis=0)
-    shutmean=np.nanmin(shutterout,axis=0)
+    shutmean=np.mean(shutterout,axis=0)
     shutmax=np.nanmax(shutterout,axis=0)
     print("min of shutter speeds by resolution: ",shutmin)
     print("mean of shutter speeds by resolution: ",shutmean)
