@@ -50,30 +50,10 @@ def cstop():
     camera.stop_preview()
     
 def capture():
-    camera.resolution=(1786,50)
-    shutterspeed=1
-    maxvalueinit=0
-    GPIO.output(chan_listl,1)
-    camera.exposure_mode='off'
-    camera.awb_mode='off'
-    
-    camera.iso=100
-    while maxvalueinit<255:
-        camera.shutter_speed=shutterspeed
-        camera.capture('lcalib.jpeg',use_video_port=True)
-        calib=cv.imread('lcalib.jpeg')
-        calibb=calib[:,:,0]
-        calibg=calib[:,:,1]
-        calibr=calib[:,:,2]
-        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
-        maxvalb=maxVal
-        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibg)
-        maxvalg=maxVal
-        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibr)
-        maxvalr=maxVal
-        maxvalueinit=max(maxvalb,maxvalg,maxvalr)
-        shutterspeed=shutterspeed+5
-        print("shutter speed %d max value %d B %d G %d R %d" %(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr)) 
+    shutterspeedcalc()  
+    continueorrecalc=input("Take photo (y) or recalculate (n)?: ")
+    if continueorrecalc !='y':
+        shutterspeedcalc()    
     camera.resolution=(3280,2464)
     starttime=time.time()
     GPIO.output(chan_listl,0)
@@ -149,6 +129,60 @@ def main():
     camera.close()
     GPIO.cleanup()
 
-    
+def shutterspeedcalc():
+    print("Resolution for Shutter speed calculation")
+    print("Resolution 1: 320,240")
+    print("Resolution 2: 640,480")
+    print("Resolution 3: 1280,720")
+    print("Resolution 4: 1640,1232")
+    print("Resolution 5: 3280:2464")
+    print("Resolution 6: 500,50")
+    print("Resolution 7: 1000,50")
+    print("Resolution 8: 1786,50")
+    resinput=input("Select Resolution: ")
+    resinput=int(resinput)
+    if resinput ==1:
+        camera.resolution=(320,240)
+    if resinput ==2:
+        camera.resolution=(640,480)
+    if resinput ==3:
+        camera.resolution=(1280,720)
+    if resinput ==4:
+        camera.resolution=(1640,1232)
+    if resinput ==5:
+        camera.resolution=(3280,2464)
+    if resinput ==6:
+        camera.resolution=(500,50)
+    if resinput ==7:
+        camera.resolution=(1000,50)
+    if resinput ==8:
+        camera.resolution=(1786,50)    
+    shutterspeed=1
+    maxvalueinit=0
+    GPIO.output(chan_listl,1)
+    camera.exposure_mode='off'
+    camera.awb_mode='off'
+    camera.image_denoise=0
+    camera.image_effect='none'
+    camera.meter_mode='spot'
+    camera.iso=100
+    while maxvalueinit<255:
+        camera.shutter_speed=shutterspeed
+        camera.capture('lcalib.jpeg',use_video_port=True)
+        calib=cv.imread('lcalib.jpeg')
+        calibb=calib[:,:,0]
+        calibg=calib[:,:,1]
+        calibr=calib[:,:,2]
+        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
+        maxvalb=maxVal
+        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibg)
+        maxvalg=maxVal
+        (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibr)
+        maxvalr=maxVal
+        maxvalueinit=max(maxvalb,maxvalg,maxvalr)
+        shutterspeed=shutterspeed+25
+        print("shutter speed %d max value %d B %d G %d R %d" %(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr))      
+        
+   
 if __name__ == "__main__":
     main()
