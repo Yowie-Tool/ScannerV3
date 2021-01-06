@@ -20,7 +20,7 @@ GPIO.output(chan_listc,(1,0,0))
 GPIO.output(chan_listl,0)
 camera=PiCamera()
 camera.resolution=(640,480)
-capnum=0
+
 
 
 def camera1():
@@ -130,6 +130,7 @@ def main():
     GPIO.cleanup()
 
 def shutterspeedcalc():
+    global maxvalueinit
     print("Resolution for Shutter speed calculation")
     print("Resolution 1: 320,240")
     print("Resolution 2: 640,480")
@@ -166,6 +167,8 @@ def shutterspeedcalc():
     camera.image_effect='none'
     camera.meter_mode='spot'
     camera.iso=100
+    inputmax=("Input cutoff threshold value (between 1 and 255: ")
+    inputmax=int(inputmax)
     while maxvalueinit<255:
         camera.shutter_speed=shutterspeed
         camera.capture('lcalib.jpeg',use_video_port=True)
