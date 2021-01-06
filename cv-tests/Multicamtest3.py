@@ -229,7 +229,7 @@ def shutterspeedcalcfull():
             camera.resolution=(1786,50)    
         shutterspeed=1
         camera.shutter_speed=shutterspeed
-        time.wait(1)
+        time.sleep(1)
         while maxvalueinit<inputmax:
             camera.shutter_speed=shutterspeed
             camera.capture('lcalib.jpeg',use_video_port=True)
