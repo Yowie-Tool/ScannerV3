@@ -167,7 +167,7 @@ def shutterspeedcalc():
     camera.image_effect='none'
     camera.meter_mode='spot'
     camera.iso=100
-    inputmax=("Input cutoff threshold value (between 1 and 255: ")
+    inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
     while maxvalueinit<255:
         camera.shutter_speed=shutterspeed
