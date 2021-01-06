@@ -115,6 +115,8 @@ def main():
             laseroff()
         if userin =='cal':
             shutterspeedcalc()
+        if userin =='calf':
+            shutterspeedcalcfull()
         if userin=='h':
             print ("c1 - select camera 1")
             print ("c3 - select camera 3")
@@ -190,6 +192,62 @@ def shutterspeedcalc():
         print('shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
     print("")
         
-   
+def shutterspeedcalcfull():
+    global maxvalueinit
+    global maxvalb
+    global maxvalg
+    global maxvalr
+    shutterout=[]
+    shutterspeed=1
+    camera.shutter_speed=shutterspeed
+    maxvalueinit=0
+    GPIO.output(chan_listl,1)
+    camera.exposure_mode='off'
+    camera.awb_mode='off'
+    camera.image_denoise=0
+    camera.image_effect='none'
+    camera.meter_mode='spot'
+    camera.iso=100
+    inputmax=input("Input cutoff threshold value (between 1 and 255: ")
+    inputmax=int(inputmax)
+    resinput=1
+    while resinput<9:
+        if resinput ==1:
+            camera.resolution=(320,240)
+        if resinput ==2:
+            camera.resolution=(640,480)
+        if resinput ==3:
+            camera.resolution=(1280,720)
+        if resinput ==4:
+            camera.resolution=(1640,1232)
+        if resinput ==5:
+            camera.resolution=(3280,2464)
+        if resinput ==6:
+            camera.resolution=(500,50)
+        if resinput ==7:
+            camera.resolution=(1000,50)
+        if resinput ==8:
+            camera.resolution=(1786,50)    
+        shutterspeed=1
+        while maxvalueinit<inputmax:
+            camera.shutter_speed=shutterspeed
+            camera.capture('lcalib.jpeg',use_video_port=True)
+            calib=cv.imread('lcalib.jpeg')
+            calibb=calib[:,:,0]
+            calibg=calib[:,:,1]
+            calibr=calib[:,:,2]
+            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibb)
+            maxvalb=maxVal
+            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibg)
+            maxvalg=maxVal
+            (minVal, maxVal, MinLoc, maxLoc) = cv.minMaxLoc(calibr)
+            maxvalr=maxVal
+            maxvalueinit=max(maxvalb,maxvalg,maxvalr)
+            shutterspeed=shutterspeed+25
+            print('shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
+        shutterout.append(shutterspeed)
+        resinput=resinput+1
+    print("Shutter speeds in order: ", shutterout)
+     
 if __name__ == "__main__":
     main()
