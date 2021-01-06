@@ -249,7 +249,7 @@ def shutterspeedcalcfull():
                 maxvalr=maxVal
                 maxvalueinit=max(maxvalb,maxvalg,maxvalr)
                 shutterspeed=shutterspeed+25
-                print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
+                print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d] rotation [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr,rotation),end="")     
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
         s.write(('a450\n').encode('utf-8'))
