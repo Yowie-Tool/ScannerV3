@@ -220,11 +220,11 @@ def shutterspeedcalcfull():
         shutteroutline=[]
         while resinput<6:
             if resinput ==1:
-                camera.resolution=(1280,720)
-            if resinput ==2:
-                camera.resolution=(1640,1232)
-            if resinput ==3:
                 camera.resolution=(3280,2464)
+            if resinput ==2:
+                camera.resolution=(1280,720)
+            if resinput ==3:
+                camera.resolution=(1640,1232)
             if resinput ==4:
                 camera.resolution=(1000,50)
             if resinput ==5:
@@ -253,11 +253,12 @@ def shutterspeedcalcfull():
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
         s.write(('a450\n').encode('utf-8'))
-        time.sleep(10)
+        time.sleep(5)
         shutterout.append(shutteroutline)
     print("")
-    print("Shutter speeds in order: ", shutterout)
+    #print("Shutter speeds in order: ", shutterout)
     print("mean of shutter speeds by resolution: ",np.mean(shutterout,axis=0))
+    print("max of shutter speeds by resolution: ",np.nanmax(shutterout,axis=0))
     s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
 if __name__ == "__main__":
     main()
