@@ -198,8 +198,6 @@ def shutterspeedcalcfull():
     global maxvalg
     global maxvalr
     shutterout=[]
-
-    maxvalueinit=0
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
     camera.awb_mode='off'
@@ -230,6 +228,7 @@ def shutterspeedcalcfull():
         shutterspeed=1
         camera.shutter_speed=shutterspeed
         time.sleep(1)
+        maxvalueinit=0
         while maxvalueinit<inputmax:
             camera.shutter_speed=shutterspeed
             camera.capture('lcalib.jpeg',use_video_port=True)
