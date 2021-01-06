@@ -233,7 +233,7 @@ def shutterspeedcalcfull():
                 camera.resolution=(1000,50)
             if resinput ==5:
                 camera.resolution=(1786,50)   
-            shutterspeed=1
+            shutterspeed=200
             camera.shutter_speed=shutterspeed
             time.sleep(1)
             maxvalueinit=0
