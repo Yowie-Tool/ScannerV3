@@ -49,11 +49,7 @@ def cpreview():
 def cstop():
     camera.stop_preview()
     
-def capture():
-    shutterspeedcalc()  
-    continueorrecalc=input("Take photo (y) or recalculate (n)?: ")
-    if continueorrecalc !='y':
-        shutterspeedcalc()    
+def capture():  
     camera.resolution=(3280,2464)
     starttime=time.time()
     GPIO.output(chan_listl,0)
@@ -117,6 +113,8 @@ def main():
             laserc()
         if userin =='l0':
             laseroff()
+        if userin =='cal':
+            shutterspeedcalc()
         if userin=='h':
             print ("c1 - select camera 1")
             print ("c3 - select camera 3")
@@ -131,6 +129,9 @@ def main():
 
 def shutterspeedcalc():
     global maxvalueinit
+    global maxvalb
+    global maxvalg
+    global maxvalr
     print("Resolution for Shutter speed calculation")
     print("Resolution 1: 320,240")
     print("Resolution 2: 640,480")
@@ -169,7 +170,7 @@ def shutterspeedcalc():
     camera.iso=100
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
-    while maxvalueinit<255:
+    while maxvalueinit<inputmax:
         camera.shutter_speed=shutterspeed
         camera.capture('lcalib.jpeg',use_video_port=True)
         calib=cv.imread('lcalib.jpeg')
