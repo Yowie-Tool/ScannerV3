@@ -122,6 +122,7 @@ def main():
             print ("p - Preview")
             print ("s - Stop Preview")
             print ("l = laser (on or off)")
+            print ("cal = shutter speed calibration")
             print ("cap = capture")
     
     camera.close()
@@ -160,6 +161,7 @@ def shutterspeedcalc():
     if resinput ==8:
         camera.resolution=(1786,50)    
     shutterspeed=1
+    camera.shutter_speed=shutterspeed
     maxvalueinit=0
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
@@ -185,8 +187,8 @@ def shutterspeedcalc():
         maxvalr=maxVal
         maxvalueinit=max(maxvalb,maxvalg,maxvalr)
         shutterspeed=shutterspeed+25
-        print('shutter speed %d max value %d B %d G %d R %d /r' %(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
-        print("")
+        print('shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
+    print("")
         
    
 if __name__ == "__main__":
