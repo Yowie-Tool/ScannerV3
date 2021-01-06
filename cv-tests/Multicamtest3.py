@@ -205,7 +205,7 @@ def shutterspeedcalcfull():
     global maxvalg
     global maxvalr
     shutteroutline=[]
-    shutteroutcomplete=[]
+    shutterout=[]
     GPIO.output(chan_listl,1)
     camera.exposure_mode='off'
     camera.awb_mode='off'
