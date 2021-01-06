@@ -250,7 +250,7 @@ def shutterspeedcalcfull():
                 print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
-            s.write(('a450\n').encode('utf-8'))
+        s.write(('a450\n').encode('utf-8'))
         shutterout.append(shutteroutline)
     print("Shutter speeds in order: ", shutterout)
     s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
