@@ -185,7 +185,8 @@ def shutterspeedcalc():
         maxvalr=maxVal
         maxvalueinit=max(maxvalb,maxvalg,maxvalr)
         shutterspeed=shutterspeed+25
-        print("shutter speed %d max value %d B %d G %d R %d" %(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr))      
+        print("shutter speed %d max value %d B %d G %d R %d \r" %(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")      
+        print("")
         
    
 if __name__ == "__main__":
