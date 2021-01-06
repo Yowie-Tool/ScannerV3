@@ -215,7 +215,7 @@ def shutterspeedcalcfull():
     camera.iso=100
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
-    for rotation in range(3):
+    for rotation in range(4):
         resinput=1
         shutteroutline=[]
         while resinput<6:
