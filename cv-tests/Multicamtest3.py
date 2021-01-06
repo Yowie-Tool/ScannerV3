@@ -215,7 +215,7 @@ def shutterspeedcalcfull():
     camera.iso=100
     inputmax=input("Input cutoff threshold value (between 1 and 255: ")
     inputmax=int(inputmax)
-    for rotation in range(4):
+    for rotation in range(8):
         resinput=1
         shutteroutline=[]
         while resinput<6:
@@ -252,11 +252,12 @@ def shutterspeedcalcfull():
                 print('resolution {%d] shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(resinput,shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
             shutteroutline.append(shutterspeed)
             resinput=resinput+1
-        s.write(('a900\n').encode('utf-8'))
+        s.write(('a450\n').encode('utf-8'))
         time.sleep(10)
         shutterout.append(shutteroutline)
     print("")
     print("Shutter speeds in order: ", shutterout)
+    print("mean of shutter speeds by resolution: ",np.mean(shutterout,axis=0))
     s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
 if __name__ == "__main__":
     main()
