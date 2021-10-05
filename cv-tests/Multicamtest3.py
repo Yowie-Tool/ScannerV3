@@ -72,24 +72,28 @@ def capture():
     src=cv.subtract(lon,loff)
     srcone=src[:,:,0]
     threshamount = input("Enter threshold amount 1-255: ")
+    outputselect = input("Select output - 1: all, 2: weighted average, 3: raw data: ")
+    outputselect=int(outputselect)
     threshamount = int(threshamount)
     retval, threshold_ar = cv.threshold(srcone, threshamount, 255, cv.THRESH_TOZERO);
     maxvalue = np.argmax(threshold_ar,axis=1)
     row, col = threshold_ar.shape
-    rawdata_file=open(file_path+"raw data.txt","wt")
-    for i in range(row):
-        for i2 in range(col):
-            rawdata_file.write(str(threshold_ar[i,i2]) + ",")
-        rawdata_file.write("\n")
-    rawdata_file.close()
-    weighteddata_file=open(file_path+"weighted data.txt","wt")
-    for i in range(row):
-        if maxvalue[i] != 0:
-            newarray=threshold_ar[i,:]
-            laserctr=weighted_average(newarray)
-            if laserctr != 0:
-                weighteddata_file.write(str(laserctr) + "\n")
-    weighteddata_file.close()            
+    if outputselect == 1 or outputselect == 3:
+        rawdata_file=open(file_path+"raw data.txt","wt")
+        for i in range(row):
+            for i2 in range(col):
+                rawdata_file.write(str(threshold_ar[i,i2]) + ",")
+                rawdata_file.write("\n")
+        rawdata_file.close()
+    if outputselect == 1 or outputselect == 2:      
+        weighteddata_file=open(file_path+"weighted data.txt","wt")
+        for i in range(row):
+            if maxvalue[i] != 0:
+                newarray=threshold_ar[i,:]
+                laserctr=weighted_average(newarray)
+                if laserctr != 0:
+                    weighteddata_file.write(str(laserctr) + ", " + maxvalue[i] + "\n")
+        weighteddata_file.close()            
     endtime=time.time()
     print("images read and saved %d seconds"%(endtime-starttime))
     
@@ -112,6 +116,8 @@ def main():
             cpreview()
         if userin=='s':
             cstop()
+        if userin=='ss':
+            shutterspeedman()            
         if userin=='cc':
             ccheck()
         if userin=='cap':
@@ -199,6 +205,28 @@ def shutterspeedcalc():
         print('shutter speed [%d] max value [%d] B [%d] G [%d] R [%d]\r'%(shutterspeed,maxvalueinit,maxvalb,maxvalg,maxvalr),end="")     
     print("")
         
+def shutterspeedman():
+    GPIO.output(chan_listl,1)
+    camera.exposure_mode='off'
+    camera.awb_mode='off'
+    camera.image_denoise=0
+    camera.image_effect='none'
+    camera.meter_mode='spot'
+    camera.iso=100
+    currentspeed=camera.exposure_Speed
+    print("Current Shutter speed: " + currentspeed)
+    speedin=''
+    while speedin != "end":
+        speedin=input("Reduce speed = U, Increase speed = D, to end = end")
+        if speedin == 'u' or speedin == 'U':
+            currentspeed=camera.exposure_Speed
+            shutterspeed=currentspeed+25
+            camera.shutter_speed=shutterspeed
+        if speedin == 'd' or speedin == 'D':
+            currentspeed=camera.exposure_Speed
+            shutterspeed=currentspeed-25
+            camera.shutter_speed=shutterspeed   
+                 
 def shutterspeedcalcfull():
     s.write(('e1\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
     s.write(('z\n').encode('utf-8')) #Zeroes the encoder in the stepper
