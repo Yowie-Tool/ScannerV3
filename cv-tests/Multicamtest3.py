@@ -219,11 +219,11 @@ def shutterspeedman():
     while speedin != "end":
         speedin=input("Reduce speed = U, Increase speed = D, to end = end")
         if speedin == 'u' or speedin == 'U':
-            currentspeed=camera.exposure_Speed
+            currentspeed=camera.exposure_speed
             shutterspeed=currentspeed+25
             camera.shutter_speed=shutterspeed
         if speedin == 'd' or speedin == 'D':
-            currentspeed=camera.exposure_Speed
+            currentspeed=camera.exposure_speed
             shutterspeed=currentspeed-25
             camera.shutter_speed=shutterspeed   
                  
