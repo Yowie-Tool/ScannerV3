@@ -92,6 +92,7 @@ def capture():
                 newarray=threshold_ar[i,:]
                 laserctr=weighted_average(newarray)
                 if laserctr != 0:
+                    maxvalue.flatten()
                     weighteddata_file.write(str(laserctr) + ", " + maxvalue[i] + "\n")
         weighteddata_file.close()            
     endtime=time.time()
@@ -217,15 +218,19 @@ def shutterspeedman():
     print('Current Shutter speed  [%d]\r'%(currentspeed))
     speedin=''
     while speedin != "end":
-        speedin=input("Reduce speed = U, Increase speed = D, to end = end")
+        speedin=input("Reduce speed = U, Increase speed = D, to end = end: ")
         if speedin == 'u' or speedin == 'U':
             currentspeed=camera.exposure_speed
             shutterspeed=currentspeed+25
             camera.shutter_speed=shutterspeed
+            currentspeed=camera.exposure_speed
+            print('Current Shutter speed  [%d]\r'%(currentspeed)
         if speedin == 'd' or speedin == 'D':
             currentspeed=camera.exposure_speed
             shutterspeed=currentspeed-25
-            camera.shutter_speed=shutterspeed   
+            camera.shutter_speed=shutterspeed
+            currentspeed=camera.exposure_speed
+            print('Current Shutter speed  [%d]\r'%(currentspeed)               
                  
 def shutterspeedcalcfull():
     s.write(('e1\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
