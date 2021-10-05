@@ -286,7 +286,7 @@ def weighted_average(t):
     maxvalue=np.argmax(t) # position of value
     length=t.size #length of array, should be equal to Y resolution....
     numerator=sum((t[i]*i) for i in range(length))
-    denominator=sum(i for i in range(length))
+    denominator=sum(t[i] for i in range(length))
     weighted=round(numerator/denominator,2)            
     return(weighted)
       
