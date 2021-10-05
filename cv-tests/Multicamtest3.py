@@ -8,6 +8,7 @@ import serial
 s=serial.Serial('/dev/ttyAMA0',9600, timeout = 6, writeTimeout = 20)
 s.flushInput()  # Flush startup text in serial input
 s.write(('\n\n').encode('utf-8'))
+file_path = '/media/pi/SCANFILES/'
 
 chan_listc=[12,16,18] #camera switcher pins
 chan_listl=[29,31,33] #laser pins
@@ -59,15 +60,15 @@ def capture():
     starttime=time.time()
     GPIO.output(chan_listl,0)
     print("main capture start")
-    camera.capture('loff.jpeg',use_video_port=True)
+    camera.capture(file_path + "loff.jpeg",use_video_port=True)
     GPIO.output(chan_listl,1)
-    camera.capture('lon.jpeg',use_video_port=True)
+    camera.capture(file_path + "lon.jpeg",use_video_port=True)
     GPIO.output(chan_listl,0)
     endtime=time.time()
     print("captured in %d seconds"%(endtime-starttime))
     starttime=time.time()
-    loff=cv.imread('loff.jpeg')
-    lon=cv.imread('lon.jpeg')
+    loff=cv.imread(file_path + "loff.jpeg")
+    lon=cv.imread(file_path + "lon.jpeg")
     src=cv.subtract(lon,loff)
     if maxvalueinit==maxvalb:
         colour=0
@@ -81,13 +82,13 @@ def capture():
     retval, threshold_ar = cv.threshold(srcone, threshamount, 255, cv.THRESH_TOZERO);
     maxvalue = np.argmax(threshold_ar,axis=1)
     row, col = threshold_ar.shape
-    text_file=open("output.txt","wt")
+    rawdata_file=open(file_path+"raw data.txt","wt")
     for i in range(row):
-        if maxvalue[i] != 0:
-            for i2 in range(col):
-                text_file.write(str(threshold_ar[i,i2]) + ",")
-            text_file.write("\n")
-    text_file.close()
+        for i2 in range(col):
+            rawdata_file.write(str(threshold_ar[i,i2]) + ",")
+        rawdata_file.write("\n")
+    rawdata_file.close()
+
     endtime=time.time()
     print("images read and saved %d seconds"%(endtime-starttime))
     
