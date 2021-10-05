@@ -88,7 +88,14 @@ def capture():
             rawdata_file.write(str(threshold_ar[i,i2]) + ",")
         rawdata_file.write("\n")
     rawdata_file.close()
-
+    weighteddata_file=open(file_path+"weighted data.txt","wt")
+    for i in range(row):
+        if maxvalue[i] != 0:
+            newarray=threshold_ar[i,:]
+            laserctr=weighted_average(newarray)
+            if laserctr != 0:
+                weighteddata_file.write(str(laserctr) + "\n")
+    weighteddata_file.close()            
     endtime=time.time()
     print("images read and saved %d seconds"%(endtime-starttime))
     
@@ -277,6 +284,56 @@ def shutterspeedcalcfull():
         print("3/4 of slice photo1 mean: ",((shutmean[2])*0.75))
         print("3/4 of slice photo1 max: ",((shutmax[2])*0.75))
         
-    s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.     
+    s.write(('e0\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.   
+    
+def weighted_average(t):
+    t = t.flatten()
+    tmax=max(t) # highest intensity value in row
+    maxvalue=np.argmax(t) # position of value
+    length=t.size #length of array, should be equal to Y resolution....
+    tcurrent=0
+    tlast=tmax
+    tint=maxvalue
+    if maxvalue > 0:
+        while tcurrent < tlast and tcurrent != 0:
+            if tint > 1:
+                tlast=t[tint]
+                tint=tint-1
+                tcurrent=t[tint]
+        tminv=tint+1 #the last descending value position in the negative direction
+    elif maxvalue == 0:
+        tminv=0
+    tcurrent=0
+    tlast=tmax
+    tint=maxvalue
+    if maxvalue < length:
+        while tcurrent < tlast and tcurrent != 0:
+            if tint < (length-1):
+                tlast=t[tint]
+                tint=tint+1
+                tcurrent=t[tint]
+        tmaxv=tint-1 #the last descending value position in the positive direction
+    elif maxvalue == length:
+        tmaxv=length
+    tint2 = tminv-tmaxv+1
+    tint3 = tmaxv-1
+    tint4 = tmaxv-1
+    tout1=0
+    print('tminv %d tmaxv %d tint2 %d' % (tminv,tmaxv,tint2))
+    for i in range(tint2):
+        tout1=tout1+(tint3*(t[tint3]))
+        tint3=tint3+1 # sum of position * intensity in limited array
+    tout2=0
+    for i2 in range(tint2):
+        tout2=tout2+(t[tint4])
+        tint4 = tint4 + 1 #sum of intensity in limited array
+                
+    if tout2 != 0:
+        weighted=(tout1/tout2) #weighted value out, if laser line found to be more than 1 pixel wide (to eliminate random points)
+    else:
+        weighted = 0
+                
+    return(weighted)
+      
 if __name__ == "__main__":
     main()
