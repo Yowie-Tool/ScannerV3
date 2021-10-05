@@ -213,7 +213,7 @@ def shutterspeedman():
     camera.image_effect='none'
     camera.meter_mode='spot'
     camera.iso=100
-    currentspeed=camera.exposure_Speed
+    currentspeed=camera.exposure_speed
     print("Current Shutter speed: " + currentspeed)
     speedin=''
     while speedin != "end":
