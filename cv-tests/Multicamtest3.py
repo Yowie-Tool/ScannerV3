@@ -93,7 +93,7 @@ def capture():
                 laserctr=weighted_average(newarray)
                 if laserctr != 0:
                     maxvalue.flatten()
-                    weighteddata_file.write(str(laserctr) + ", " + maxvalue[i] + "\n")
+                    weighteddata_file.write(str(laserctr) + ", " + str(maxvalue[i]) + "\n")
         weighteddata_file.close()            
     endtime=time.time()
     print("images read and saved %d seconds"%(endtime-starttime))
