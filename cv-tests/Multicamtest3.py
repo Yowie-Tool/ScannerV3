@@ -224,13 +224,14 @@ def shutterspeedman():
             shutterspeed=currentspeed+25
             camera.shutter_speed=shutterspeed
             currentspeed=camera.exposure_speed
-            print('Current Shutter speed  [%d]\r'%(currentspeed)
+            print('Current Shutter speed  [%d]\r'%(currentspeed))
+                  
         if speedin == 'd' or speedin == 'D':
             currentspeed=camera.exposure_speed
             shutterspeed=currentspeed-25
             camera.shutter_speed=shutterspeed
             currentspeed=camera.exposure_speed
-            print('Current Shutter speed  [%d]\r'%(currentspeed)               
+            print('Current Shutter speed  [%d]\r'%(currentspeed))               
                  
 def shutterspeedcalcfull():
     s.write(('e1\n').encode('utf-8')) #Enables the stepper motor driver, turns out the program light.
