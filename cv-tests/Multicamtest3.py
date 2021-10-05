@@ -70,13 +70,7 @@ def capture():
     loff=cv.imread(file_path + "loff.jpeg")
     lon=cv.imread(file_path + "lon.jpeg")
     src=cv.subtract(lon,loff)
-    if maxvalueinit==maxvalb:
-        colour=0
-    if maxvalueinit==maxvalg:
-        colour=1
-    else:
-        colour=2
-    srcone=src[:,:,colour]
+    srcone=src[:,:,0]
     threshamount = input("Enter threshold amount 1-255: ")
     threshamount = int(threshamount)
     retval, threshold_ar = cv.threshold(srcone, threshamount, 255, cv.THRESH_TOZERO);
